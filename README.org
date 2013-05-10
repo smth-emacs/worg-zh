@@ -19,11 +19,63 @@
   - 网页 -- http://orgmode.org/worg/
   - git  -- http://orgmode.org/cgit.cgi/worg.git/
 
-* 译文约定
+* 项目约定
+** 软件约定
 
-软件版本约定：如无特别说明，则以 Emacs24 + Org-mode 8.0 为起点。
+参与本项目的翻译，你至少应该备有如下软件：
+  - Emacs, 如无特别说明，以 Emacs 24 为起点。
+  - Org-mode, 如无特别说明，以 8.0 版本为起点。
+  - Git, 以 1.7 版本为起点。
 
-** 名词列表
+** Git 分支约定
+
+仓库 *smth-emacs/worg-zh* 有三个分支：
+  - *master* -- 用于保存翻译并核对好的内容，由管理员管理。
+  - *devel* -- 进展中的分支，由于保存部分翻译，或者新添加待审核的内容。
+  - *gh-pages* -- 由 master 分支生成的 HTML 页面。
+
+志愿者提交的 =pull request= 内容应首先 merge 到 =devel= 分支，等管理员审核后再合
+并到 =master= 分支中去。为保持 =master= 与 =devel= 的分支历史记录的清晰，管理员
+在执行 =git merge= 操作时应该用参数 =--no-ff=, 即避免 =fast-forward= 合并。
+
+志愿者在翻译时，可按如下流程执行：
+  1) 在 GitHub 上 =fork= 本仓库到自己的账号下，比如 *exaos/worg-zh*
+  2) 克隆自己仓库 worg-zh 到本地。
+     : git clone git@github.com:exaos/worg-zh.git
+  3) 添加一个英文的远程仓库，并提取其仓库内容。
+     : git remote add cgit-worg git://orgmode.org/worg.git
+     : git fetch --all
+  4) 把英文版本的内容创建一个本地分支，比如 =worg=:
+     : git branch -b worg cgit-worg/master
+  5) 从英文仓库中提取新版本的页面开始翻译。比如英文版本的 =worg-setup.org= 文件
+     比本地新，则可以这样提出文件：
+     : git co worg -- worg-setup.org
+  6) 添加 =smth-emacs/worg-zh= 为远程仓库，并为 =pull request= 创建新的分支。
+     : git remote add gh-smth git://github.com/smth-emacs/worg-zh.git
+     : git fetch --all
+     : git branch -b for-smth gh-smth/devel
+  7) 在你自己的 =master= 分支下可以任意修改并 =commit=, 感觉完善并可以提交给
+     =smth-emacs/worg-zh= 了，先切换到 =for-smth= 分支，使用 =--no-ff= 选项进行
+     =merge= 操作:
+     : git checkout for-smth
+     : git merge --no-ff master
+     : git push origin for-smth:for-smth
+  8) 然后在 github 上用你的 =for-smth= 分支向 =smth-emacs/worg-zh= 发起 =pull
+     request=. 管理员收到请求时，会首先合并到 =devel= 分支下，检查无误后，再进一
+     步合并到 =master= 分支中。
+
+对于 =smth-emacs/worg-zh= 已经包含有的文件：
+  - 如果已经有中文翻译，但未完成的，建议继续完成。
+  - 如果还没有中文翻译，并且有新的英文版本的，按上述步骤 5) 中添加新文件，但应该
+    把英文版本的 commit 号包含在提交历史中。比如：
+    : git commit -m "Fetch new version worg-setup.org: worg.git-ref:9531016"
+  - 如果中文翻译已经完成，并且有新的英文版本的，应将英文版本检出其它文件名，根据
+    它直接更新已经翻译的文件。
+
+** 译文及名词
+
+为符合 GNU 一贯的风格，在译文中 Org mode 可称为 Org, Org-mode 或 Orgmode, 尽量不
+要用 org-mode.
 
 * 参加须知
 
