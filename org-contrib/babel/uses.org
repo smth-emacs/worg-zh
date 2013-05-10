@@ -1,0 +1,258 @@
+#+OPTIONS:    H:3 num:nil toc:1 \n:nil @:t ::t |:t ^:{} -:t f:t *:t TeX:t LaTeX:nil skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate hideblocks
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) 
+#+TITLE:      Source Code Blocks: Uses
+#+AUTHOR:     Thomas S. Dye
+#+EMAIL:      tsd at tsdye dot com
+#+LANGUAGE:   en
+#+STYLE:      <style type="text/css">#outline-container-introduction{ clear:both; }</style>
+#+STYLE:      <style type="text/css">#table-of-contents{ max-width:100%; }</style>
+#+LINK_UP:  index.php
+#+LINK_HOME: http://orgmode.org/worg/
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+* Introduction
+
+  This page collects examples of using source code blocks in a variety
+  of contexts.  Contributions of further examples from Org Mode users are
+  very welcome.
+
+
+* Using Multiple Languages
+
+** [[file:examples/data-collection-analysis.org][Data Collection and Analysis]]
+   (raw file available at [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/data-collection-analysis.org%3Bhb%3DHEAD][data-collection-analysis.org]])
+
+   This example uses Babel to automate a repeated data-collection
+   and analysis task.  A Ruby code block is used to scrape data from
+   the output of a computational experiment.  This data is then written
+   to an Org-mode table.  A block of R code reads from this table and
+   calculates lines of fit.  Finally a block of gnuplot code is used to
+   graph the results of both the raw data and the R analysis.  By
+   performing all of these steps within an Org-mode document working
+   notes, discussion, and TODOs can be naturally interspersed with the
+   code, and the results can easily be published to HTML or PDF for
+   distribution.
+
+* Integrations with R
+** [[file:how-to-use-Org-Babel-for-R.org][Tutorial Org/Babel/R by Feiming Chen]]                            :noexport:
+
+** [[http://www.stats.ox.ac.uk/~davison/software/org-babel/drift.org.html][Teaching Evolution Using R]]
+   This example is a tutorial on simulating evolution in R. It contains
+   examples of diagrams generated with =ditaa=, LaTeX, and graphics
+   generated with R.
+
+   A good way to see how org-babel functions to create the tutorial is to
+   view the [[http://www.stats.ox.ac.uk/~davison/software/org-babel/drift.org.html][htmlized org buffer]]. This also provides an example of how
+   images and latex-generated mathematical notation can be viewed inline
+   in emacs. The HTML export version is [[file:examples/drift.org][here]].
+
+** [[file:examples/ascii.org][An Example Using the Ascii Package]]
+   (raw file available at [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/ascii.org%3Bhb%3DHEAD][ascii.org]])
+ 
+   This example shows how to use Org Mode source code blocks with =R=
+   and the =ascii= package.  The =ascii= package is useful for
+   retrieving non-tabular =R= data structures in Org Mode.
+
+** [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob%3Bf%3Dorg-contrib/babel/examples/foo.org.html%3Bh%3D3d157d2ac1b361eea9afc71436a3b0a23a5f1070%3Bhb%3DHEAD][/An Babel Demo/ -- A Comparison to Sweave]]
+  :PROPERTIES:
+  :CUSTOM_ID: foo
+  :END:
+
+[[http://www.stat.umn.edu/~charlie/][Charlie Geyer]] created an excellent short demonstration of Sweave entitled
+/An Sweave Demo/ available at [[http://www.stat.umn.edu/~charlie/Sweave/][his Sweave page]].  There is now an Babel
+version of this demonstration entitled /An Babel Demo/ which matches
+Charlie's document word for word (as much as possible) and figure for
+figure with all the examples implemented using Babel instead of Sweave.
+
+Compare the two side-by-side.
+
+|        | source                                  | pdf     |
+|--------+-----------------------------------------+---------|
+| Sweave | [[http://www.stat.umn.edu/~charlie/Sweave/foo.Rnw][foo.Rnw]]                                 | [[http://www.stat.umn.edu/~charlie/Sweave/foo.pdf][foo.pdf]] |
+| Babel  | [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/foo.org%3Bhb%3DHEAD][foo.org]] ([[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/foo.org.html%3Bhb%3DHEAD][foo.org.html]] as seen in Emacs) | [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/foo.pdf%3Bhb%3DHEAD][foo.pdf]] |
+
+** [[file:examples/Rpackage.org][R Package Development Headers]]
+This document contains  
+ - tools useful for writing R extensions called /packages/
+ - source code to create a simple R package
+
+ [[http://repo.or.cz/w/Worg.git/blob_plain/HEAD:/org-contrib/babel/examples/Rpackage.org][Download]] the =.org= version of this document and place it in either
+ an R package source directory or in a clean directory to get started.
+
+** Tutorial on Emacs+ESS and Org+R by Stephen Eglen
+
+See [[http://article.gmane.org/gmane.emacs.orgmode/45777][this message]] from Stephen Eglen:
+
+: I gave a 3 hour tutorial on Emacs Speaks Statistics on Monday; this
+: included mostly Emacs and ESS, but also introduced org-mode for R users.
+: If anyone is interested, the slides and material are available at:
+
+http://www.damtp.cam.ac.uk/user/sje30/ess11
+
+* Integrations with LaTeX
+** [[file:examples/latex-form.org][A LaTeX Form]]
+   (raw file available at [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/latex-form.org%3Bhb%3DHEAD][latex-form.org]])
+
+   This example uses Babel as a user interface for a LaTeX form
+   that might be used by the members of an organization.  It uses the
+   literate programming facility of Babel to isolate the user from
+   the sometimes arcane LaTeX constructs needed to create a
+   highly-structured form.  Babel can tangle multiple documents in
+   a single Org-mode file, and this ability is used to create a
+   distribution version of the form separate from one designed for the
+   file cabinet.
+
+** [[file:examples/short-report.org][A Standardized Short Report]]
+   (raw file available at [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/short-report.org%3Bhb%3DHEAD][short-report.org]])
+
+   This example is similar to the previous one, but here the users are
+   expected to write substantial content.  This type of workflow might
+   be used by a small organization whose employees regularly produce
+   standard documents and where the writing tasks for any one document
+   are divided among the authors.  
+
+   The HTML export facility of Org-mode is used to produce a guide to
+   writing the standardized short report.  This HTML file can be used
+   to train new authors.  The Org-mode content also supplies
+   substantial direction to experienced authors as they write.
+   Org-mode keywords and tags are used to keep track of writing
+   assignments and progress.  Babel's literate programming facility
+   makes it possible to present writing tasks to the authors in an order
+   different from which they appear in the report.
+
+** [[file:examples/article-class.org][A Literate Article Class for Org Mode LaTeX Export]]              :noexport:
+
+This project is no longer supported.  It eventually became the [[http://orgmode.org/worg/org-tutorials/org-latex-export.html][LaTeX
+export tutorial.]]  It is included here as a historical curiosity.
+
+This example is a literate program that tangles an article class for
+Org-mode LaTeX export.  The class supports numerous options that
+control the look and feel of the resulting pdf file.  It provides
+several facilities: 
+
+  - Default packages :: Options to keep individual LaTeX packages from
+       loading make it somewhat easier to modify which LaTeX packages
+       are loaded during the processing of LaTeX code exported by
+       Org-mode.
+  - Semantic markup :: A facility for semantic markup is implemented,
+       which makes it possible to markup according to arbitrary LaTeX
+       styles, such as the ones distributed by journals and book publishers.
+  - Fonts :: The package also implements several choices of fonts and
+             takes steps to ensure that the fonts don't clash with the
+             symbol font files that Org-mode depends upon to typeset
+             =org-entities=.
+  - Listing themes :: The class provides pre-defined themes for
+                      formatting source code listings, which can be
+                      used as is, or used as a basis for minor modifications.
+  - Compact lists :: A facility to typeset lists with less vertical
+                     space is provided.
+  - Double spacing :: An option is provided to set lines double spaced.
+  - Table of contents :: The table of contents depth can be set
+       independently of section numbering depth.
+  - Section numbering :: Section numbering depth can specified
+       independently of the table of contents depth.
+
+* Financial Applications
+** [[file:examples/finances.org][Tracking Finances]]
+:PROPERTIES:
+:Author: Jason Dunsmore
+:CUSTOM_ID: tracking-finances
+:END:
+
+An Emacs lisp function in a Babel source block aggregates entries in
+an Org-mode table, which can be useful in tracking finances.
+ 
+** Using Ledger to Track Finances
+
+Instead of writing functions to track finances entered in Org-mode
+tables, Babel makes it possible to use Org-mode and Ledger to track
+finances.  A [[file:languages/ob-doc-ledger.org][short tutorial]] illustrates how to insert ledger entries
+in an Org-mode file and how to generate financial reports from those
+entries using Babel to call Ledger.
+
+* Reproducible Research Examples
+** [[https://github.com/tsdye/hawaii-colonization][A Reproducible Research Paper Written in Org Mode]]
+
+This git repository contains Org-mode source and data files for the
+paper "A Model-based Age Estimate for the Polynesian Colonization of
+Hawai`i," which was published in the journal [[http://sydney.edu.au/arts/publications/oceania/arch_oceaniacrnt.htm][Archaeology in
+Oceania]].
+
+The repo includes a README file with system requirements and
+instructions to make a pdf version of the paper.  Also included is a
+Makefile that automates the process of compiling the paper to pdf.
+
+The pdf file represents the initial submittal to the journal.
+[[http://sydney.edu.au/arts/publications/oceania/arch_oceaniacrnt.htm][Archaeology in Oceania]] requires a Word file at the end of the review
+process.  This was created from the Org-mode LaTeX export with the
+late Eitan Gurari's [[http://www.tug.org/applications/tex4ht/mn.html][tex4ht]] software, followed by numerous tweaks with
+Word (graciously executed by a colleague who knows how to use that
+application).
+
+Archaeologists and other scientists who work with radiocarbon dating
+might be interested in the R code for plotting multiple sets of
+results from the [[http://bcal.shef.ac.uk/top.html][BCal software.]]
+
+** [[https://github.com/tsdye/LKFS][Another Reproducible Research Paper Written in Org Mode]]
+
+This git repository contains Org-mode source and data files for the
+paper "The Tempo of Change in the Leeward Kohala Field System," which
+was published in the [[http://islandheritage.org/wordpress/?page_id%3D295][Rapa Nui Journal]].
+
+The repo includes a README file with system requirements and
+instructions to make a pdf version of the paper.  Also included is a
+Makefile that automates the process of compiling the paper to pdf.
+
+Archaeologists might be interested in the code that creates a
+graphical representation of the Harris matrix from an adjacency matrix
+of stratigraphic relations, which is included as an Org-mode table.  A
+Python source block reads the adjacency matrix and outputs GraphViz
+code.  This is used as input to the =tred= utility, which eliminates
+transitive relations.  The output of the =tred= utility is passed to
+=dot=, which prepares Figure 2 in the paper.
+
+** [[https://github.com/novoid/orgmode-iKNOW2012][Reproducible Research Demo Paper: from Org to ACM]]  ([[file:../bibtex/Voit_Dye_2012.bib][bibtex]])
+
+In Summer 2012, Karl Voit and Tom Dye produced a demo paper for the
+[[http://i-know.tugraz.at/][i-KNOW conference]] in Graz, Austria. This demo uses the new LaTeX
+exporter to generate a ready-to-submit ACM paper from raw CSV files
+and an Org-mode file.
+
+This is a proof-of-concept demo which might need some improvement
+here and there because the new LaTeX exporter is still a moving
+target. The basic concept and methods could be re-used for other
+papers that use a similar paper-generating approach.
+
+It is related to [[https://github.com/novoid/orgmode-ACM-template][orgmode-ACM-template]] which is also hosted on
+github. Please fork and send improvements!
+
+* Source Code Blocks in Org Mode
+** [[file:examples/org-check.org][Checking Your Org Mode Configuration]]
+   (raw file available at [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/org-check.org%3Bhb%3DHEAD][org-check.org]])
+
+   This example runs some diagnostic checks to see if your system and
+   Org-mode are configured to accomplish various tasks.  It is
+   currently a stub placed here in the hope that the Org-mode community
+   will augment and enhance it.  It was created in response to a thread
+   on the mailing list on how to ease the learning curve for new
+   Org-mode users.
+
+** [[file:examples/fontify-src-code-blocks.org][Pretty Fontification of Code Blocks]]
+
+The article about [[file:examples/fontify-src-code-blocks.org][pretty fontification of code blocks]] shows the user how to
+customize a couple of Emacs faces in order to enhance his Babel experience,
+and get much nicer visual separation between code and text.
+
+** [[file:examples/lob-table-operations.org][Some generic Operations on Org Mode Tables]]
+
+   (raw file available at [[http://orgmode.org/w/?p%3Dworg.git%3Ba%3Dblob_plain%3Bf%3Dorg-contrib/babel/examples/lob-table-operations.org%3Bhb%3DHEAD][lob-table-operations.org]])
+
+   [[file:examples/lob-table-operations.org][This]] babel-file contains examples, documentation and
+   implementation of four generic operations on tables:
+   - Filtering the rows of a single table: keeping or removing rows
+   - Combining two tables into one: merging or intersecting tables
+   You may apply these operations readily to your own tables.
+

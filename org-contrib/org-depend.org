@@ -1,0 +1,186 @@
+#+TITLE:     org-depend.el -- TODO dependencies for Org-mode
+#+OPTIONS:   ^:{} author:nil
+#+STARTUP: odd
+
+* General 
+
+/org-depend.el/ demonstrates a mechanism for creating TODO
+dependencies.  Note that Org-mode does already have [[http://orgmode.org/manual/TODO-dependencies.html#TODO-dependencies][built-in local
+dependencies]] which are simpler and cover most of what one usually
+wants to do.  However, the built-in implementation covers only the
+following two concepts:
+
+- blocking an entry from changing its state to DONE while it still has
+  children that are not done, or checkboxes that are unchecked
+- blocking an entry from changing its state to DONE while it still has
+  un-done siblings above it, in this way enforcing sequential work on
+  the siblings
+
+/org-depend.el/ was originally a proof-of-concept implementation of
+TODO dependencies, using two special hooks, =org-blocker-hook= and
+=org-trigger-hook=.  It remains in the distribution as an example on
+how more complex dependencies between entries can be implemented.  In
+particular it shows how to implement the following:
+
+- Dependencies on remote entries identified by ID.  These entries do
+  not have to be near-by and may even be located in a different file.
+- The possibility to /trigger/ actions in other entries.
+
+* What is implemented?
+
+** Triggering
+
+1) If an entry contains a TRIGGER property that contains the string
+   =chain-siblings(KEYWORD)=, then switching that entry to DONE does
+   do the following:
+   - The sibling following this entry switched to todo-state KEYWORD.
+   - The sibling also gets a TRIGGER property =chain-sibling(KEYWORD)=,
+     property, to make sure that, when *it* is DONE, the chain will
+     continue.
+
+2) If an entry contains a TRIGGER property that contains the string
+   =chain-siblings-scheduled=, then switching that entry to DONE does
+   the following actions, similarly to =chain-siblings(KEYWORD)=:
+   - The sibling receives the same scheduled time as the entry
+     marked as DONE (or, in the case, in which there is no scheduled
+     time, the sibling does not get any either).
+   - The sibling also gets the same TRIGGER property
+     =chain-siblings-scheduled=, so the chain can continue.
+
+3) If the TRIGGER property contains the string
+   =chain-find-next(KEYWORD[,OPTIONS])=, then switching that entry
+   to DONE do the following:
+   - All siblings are of the entry are collected into a temporary
+     list and then filtered and sorted according to =OPTIONS=
+   - The first sibling on the list is changed into =KEYWORD= state
+   - The sibling also gets the same TRIGGER property
+     =chain-find-next=, so the chain can continue.
+     
+   OPTIONS should be a comma separated string without spaces, and can
+   contain following options:
+   
+   - =from-top= the candidate list is all of the siblings in the
+     current subtree
+   - =from-bottom= candidate list are all siblings from bottom up
+   - =from-current= candidate list are all siblings from current item
+     until end of subtree, then wrapped around from first sibling
+   - =no-wrap= candidate list are siblings from current one down
+   - =todo-only= Only consider siblings that have a todo keyword
+   - =todo-and-done-only= Same as above but also include done items.
+   - =priority-up=   sort by highest priority
+   - =priority-down= sort by lowest priority
+   - =effort-up=     sort by highest effort
+   - =effort-down=   sort by lowest effort
+
+   There is also customizable variable =org-depend-find-next-options=
+   that contains default options if none are specified. Its default
+   value is =from-current,todo-only,priority-up=
+
+4) If the TRIGGER property contains any other words like
+   =XYZ(KEYWORD)=, these are treated as entry IDs with keywords.
+   That means, Org-mode will search for an entry with the ID property
+   XYZ and switch that entry to KEYWORD as well.
+
+** Blocking
+
+1) If an entry contains a BLOCKER property that contains the word
+   =previous-sibling=, the sibling above the current entry is
+   checked when you try to mark it DONE.  If it is still in a TODO
+   state, the current state change is blocked.
+
+2) If the BLOCKER property contains any other words, these are
+   treated as entry IDs.  That means, Org-mode will search for an
+   entry with the ID property exactly equal to this word.  If any
+   of these entries is not yet marked DONE, the current state change
+   will be blocked.
+
+3) Whenever a state change is blocked, an org-mark is pushed, so that
+   you can find the offending entry with =C-c &=.
+
+* Example
+
+When trying this example, make sure that the settings for TODO keywords
+have been activated, i.e. include the following line and press C-c C-c
+on the line before working with the example:
+
+#+begin_example
+  #+TYP_TODO: TODO NEXT | DONE
+#+end_example
+
+OK, here is the example.
+
+#+begin_src org
+,* TODO Win a million in Las Vegas
+,  The "third" TODO (see above) cannot become a TODO without this money.
+
+,  :PROPERTIES:
+,    :ID: I-cannot-do-it-without-money
+,  :END:
+
+,* Do this by doing a chain of TODOs
+,** NEXT This is the first in this chain
+,   :PROPERTIES:
+,     :TRIGGER: chain-siblings(NEXT)
+,   :END:
+, 
+,** This is the second in this chain
+
+,** This is the third in this chain
+,   :PROPERTIES:
+,     :BLOCKER: I-cannot-do-it-without-money
+,   :END:
+
+,** This is the forth in this chain
+,   When this is DONE, we will also trigger entry XYZ-is-my-id
+,   :PROPERTIES:
+,     :TRIGGER: XYZ-is-my-id(TODO)
+,   :END:
+
+,** This is the fifth in this chain
+, 
+,* Start writing report
+,   :PROPERTIES:
+,     :ID: XYZ-is-my-id
+,   :END:
+#+end_src
+
+* Advanced Triggerring Example
+
+In advanced example we will add a hook to automatically insert
+=chain-find-next= TRIGGER when entry is changed to NEXT and 
+automatically remove it otherwise.
+
+First evaluate the following lisp code:
+
+#+begin_src emacs-lisp
+(defun mm/org-insert-trigger ()
+  "Automatically insert chain-find-next trigger when entry becomes NEXT"
+  (cond ((equal org-state "NEXT")
+         (unless org-depend-doing-chain-find-next
+           (org-set-property "TRIGGER" "chain-find-next(NEXT,from-current,priority-up,effort-down)")))
+        ((not (member org-state org-done-keywords))
+         (org-delete-property "TRIGGER"))))
+
+(add-hook 'org-after-todo-state-change-hook 'mm/org-insert-trigger)
+#+end_src
+
+Now in the following org file, try changing item TODO state to
+NEXT. You should see properties drawer appear with the TRIGGER
+property inside.
+
+Try marking the NEXT item DONE. The next item should automatically 
+become NEXT. 
+
+Change priority of one of the items to =[#A]=, then mark the NEXT item
+DONE. The highest priority item will automatically become NEXT.
+
+#+begin_src org
+#+TYP_TODO: TODO NEXT | DONE
+
+,* Auto-NEXT example
+,** TODO Make me NEXT, then mark me DONE
+,** TODO Second item
+,** TODO Third item
+,** Plain item
+,** TODO Change my priority
+#+end_src

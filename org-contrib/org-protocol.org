@@ -1,0 +1,647 @@
+#+TITLE:   org-protocol.el -- Intercept calls from emacsclient to trigger custom actions
+#+OPTIONS: H:3 num:nil toc:t \n:nil @:t ::t |:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc ^:{} author:nil
+#+STARTUP: odd
+#+SETUPFILE:  ../macros.setupfile
+#+STYLE:   <script type="text/javascript">
+#+STYLE:   <!--/*--><![CDATA[/*><!--*/
+#+STYLE:   function makeUrl() {
+#+STYLE:     return encodeURIComponent(location.href)+
+#+STYLE:            '/'+encodeURIComponent(document.title)+
+#+STYLE:            '/'+encodeURIComponent(window.getSelection());
+#+STYLE:   }
+#+STYLE:   function storeLink() {
+#+STYLE:     document.location.href='org-protocol://store-link://'+makeUrl();
+#+STYLE:   }
+#+STYLE:   function remember() {
+#+STYLE:     document.location.href='org-protocol://remember://'+makeUrl();
+#+STYLE:   }
+#+STYLE:   function capture() {
+#+STYLE:     document.location.href='org-protocol://capture://'+makeUrl();
+#+STYLE:   }
+#+STYLE:   /*]]>*///-->
+#+STYLE:   </script>
+
+[[file:index.org][{Back to Worg's contibutions index}]]
+
+org-protocol intercepts calls from emacsclient to trigger custom actions without
+external dependencies. Only one protocol has to be configured with your external
+applications or the operating system, to trigger an arbitrary number of custom
+actions. Just register your custom sub-protocol and handler with the variable
+`org-protocol-protocol-alist'.
+
+# <<about>>
+* About org-protocol.el
+
+  =org-protocol.el= is based on code and ideas from [[file:./org-annotation-helper.org][org-annotation-helper.el]] and
+  =org-browser-url.el=.
+
+  "=org-protocol:/sub-protocol:/=" triggers actions associated with =sub-protocol=
+  through the custom variable =org-protocol-protocol-alist=.
+
+  It comes with four predefined handlers:
+    - =org-protocol-store-link= ::
+      triggered through the sub-protocol "=store-link=". Stores an Org-link and
+      pushes the URL to the =kill-ring=.
+    - =org-protocol-capture= ::
+      Fill a =CAPTURE= buffer with information gathered somewhere else. This
+      handler is triggered through the "=capture=" sub-protocol and uses the
+      function =org-capture=.
+    - =org-protocol-remember= ::
+      Fills a remember buffer with information gathered somewhere else. This
+      handler is triggered through the "=remember=" sub-protocol and still
+      available for backward compatibility. This handler uses =org-remember=. Use
+      the current =org-protocol-capture=.
+
+    - =org-protocol-open-source= ::
+      "=open-source=". Maps URLs to local filenames. Use this to open sources of
+      already published contents in emacs for editing.
+
+  =org-protocol= helps creating custom handlers [[file:../org-tutorials/org-protocol-custom-handler.org][(tutorial)]] and so called
+  =org-protocol-projects=.
+
+  {{{BeginInfoBox}}}
+  @<b>As of Org mode release 7.01 =org-protocol-remember= is now by =org-protocol-capture=.@</b>
+  If not stated otherwise, you may simply replace each occurrence of
+  /capture/ with /remember/ throughout this document, if you still want to use
+  remember templates. Use =M-x org-version= to find out about the version you're
+  using.
+  {{{EndInfoBox}}}
+
+
+# <<installation>>
+* Installation
+
+  - To load org-protocol.el add the following to your =.emacs=:
+
+    : (server-start)
+    : (add-to-list 'load-path "~/path/to/org/protocol/")
+    : (require 'org-protocol)
+
+* Browser / system setup
+
+  - [[Linux setup (Gnome)]]
+  - [[Linux setup (KDE)]]
+  - [[Windows setup]]
+  - [[Mac OS X setup]]
+
+*** Linux setup (Gnome)
+
+    For this to work, you'll need the Gnome-Libraries to be installed.
+
+    : gconftool-2 -s /desktop/gnome/url-handlers/org-protocol/command '/usr/local/bin/emacsclient %s' --type String
+    : gconftool-2 -s /desktop/gnome/url-handlers/org-protocol/enabled --type Boolean true
+
+*** Linux setup (KDE)
+
+  Add a file =org.protocol= to =~/.kde/share/kde4/services/=:
+
+#+begin_example
+# -*- conf -*-
+[Protocol]
+protocol=org-protocol
+exec=/usr/bin/emacsclient '%u'
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false
+Icon=emacs
+Description=A protocol for org-mode
+#+end_example
+
+# <<windows-setup>>
+*** Windows setup
+
+  Windows users may register the "=org-protocol=" once for all by adjusting the
+  following to their facts, save it as *.reg file and double-click it. This
+  worked for me on Windows-XP Professional and the emasc23 from ourcomments.org
+  ([[http://ourcomments.org/cgi-bin/emacsw32-dl-latest.pl]]). I'm no Windows user
+  though and enhancements are more than welcome on the org-mode mailinglist. The
+  original file is from http://kb.mozillazine.org/Register_protocol.
+
+#+begin_example
+REGEDIT4
+
+[HKEY_CLASSES_ROOT\org-protocol]
+@="URL:Org Protocol"
+"URL Protocol"=""
+[HKEY_CLASSES_ROOT\org-protocol\shell]
+[HKEY_CLASSES_ROOT\org-protocol\shell\open]
+[HKEY_CLASSES_ROOT\org-protocol\shell\open\command]
+@="\"C:\\Programme\\Emacs\\emacs\\bin\\emacsclientw.exe\" \"%1\""
+#+end_example
+
+*** Mac OS X setup 
+
+Follow the directions for installing EmacsClient.app from https://github.com/neil-smithline-elisp/EmacsClient.app. This should configure the org-protocol for all Mac OS X browsers.
+
+After installing EmacsClient.app you should then [[Verify the installation]]. Once verified, you can begin [[Using org-protocol]].
+
+*** Applications
+# <<firefox-setup>>
+***** Firefox
+      If you are using Firefox on Mac OS X, see [[Mac OS X setup]]. 
+
+   
+      Please refer to http://kb.mozillazine.org/Register_protocol and use
+      "org-protocol" as protocol.
+
+# <<acrobat-setup>>
+***** Acrobat Reader
+    :PROPERTIES:
+    :CUSTOM_ID: acrobat-reader-setup
+    :END:
+
+    Adapted from [[http://article.gmane.org/gmane.emacs.orgmode/6810]]
+
+    You place a javascript file for each menu entry in
+    =~/.adobe/Acrobat/<VERSION>/JavaScripts= on unix-like systems or
+    =c:/Program Files/Adobe/Acrobat <VERSION>/Reader/Javascripts/= on
+    Windows, or wherever your Adobe Reader Installation might look for
+    javascript.
+
+    The examples given here will place new menu entries in the "Tools"
+    menu, after restarting Adobe Reader.
+
+# <<acrobat-store-link-js>>
+******* org-store-link.js
+: // from http://article.gmane.org/gmane.emacs.orgmode/6810
+: app.addMenuItem({cName:"org-store-link", cParent:"Tools",
+:    cExec:"app.launchURL('org-protocol://store-link://' + encodeURIComponent(this.URL) + '/' + encodeURIComponent(this.info.Title));"});
+
+# <<acrobat-capture-js>>
+******* org-capture.js
+: // from http://article.gmane.org/gmane.emacs.orgmode/6810
+: app.addMenuItem({cName:"org-capture", cParent:"Tools",
+:    cExec:"app.launchURL('org-protocol://capture://' + encodeURIComponent(this.URL) + '/' + encodeURIComponent(this.info.Title) + '/');"});
+
+    And this one, if you still use remember templates:
+
+# <<acrobat-remember-js>>
+******* org-remember.js
+: // from http://article.gmane.org/gmane.emacs.orgmode/6810
+: app.addMenuItem({cName:"org-remember", cParent:"Tools",
+:    cExec:"app.launchURL('org-protocol://remember://' + encodeURIComponent(this.URL) + '/' + encodeURIComponent(this.info.Title) + '/');"});
+
+
+# <<opera-setup>>
+***** Opera
+
+  If you are using Opera on Mac OS X, see [[Mac OS X setup]]. 
+
+  Opera setup is described here:
+  http://www.opera.com/support/kb/view/535/.
+
+  To set up opera for use with org-protocol, follow these steps:
+
+  1. Choose "/Tools/" -> "/Prefences/" from the menu.
+  2. Select the tab "/Advanced/".
+  3. Choose "/Programs/" from the list on the left.
+  4. Now click the button "/Add/" on the very right.
+  5. In the new dialog window, enter "=org-protocol=" as "/Protocol/", choose the
+     radio button "/Open with other application/" and enter the path to
+     emacsclient.
+
+# <<test-org-protocol>>
+
+***** Safari
+      Safari is only supported on Mac systems, not iOS systems.
+
+      See [[Mac OS X setup]] for directions.
+
+
+*** Verify the installation
+
+    After your protocol is registered with your browser/OS, these links here
+    should work. Click on them and see if emacs reacts:
+
+#+begin_html
+ <ul>
+  <li><a href="javascript:storeLink();">Org store-link</a></li>
+  <li><a href="javascript:capture();">Org capture (select some text if you like)</a></li>
+  <li><a href="javascript:remember();">Org remember (select some text please)</a></li>
+ </ul>
+#+end_html
+
+
+# <<default-location>>
+* Using org-protocol
+
+  To actually use org-protocol add a bookmark to Firefox or Opera.
+
+  Here is the URL to use as "/Location/" for browser bookmarks. Just remove the
+  line breaks and replace "=sub-protocol=" with the real sub-protocol to use:
+
+  : javascript:location.href='org-protocol://sub-protocol://'+
+  :       encodeURIComponent(location.href)+'/'+
+  :       encodeURIComponent(document.title)+'/'+
+  :       encodeURIComponent(window.getSelection())
+
+  This URL may be used for all three standard handlers in =org-protocol.el=. Some
+  of the values will be ignored (e.g. =store-link:/= will use the URL and title
+  only).
+
+# <<org-protocol-store-link>>
+* Links and bookmarks: =org-protocol-store-link=
+
+  =org-store-link= stores an Org-link insertable through =M-x org-insert-link= and
+  pushes the URL found onto the =kill-ring= for yanking (=C-y=). The sub-protocol
+  used is "=store-link=":
+
+  : emacsclient org-protocol:/store-link:/URL/TITLE
+
+  will store this Org-link:
+
+#+begin_example
+[[URL][TITLE]]
+#+end_example
+
+  In addition, =URL= will be pushed on the =kill-ring= for yanking ('=C-y='). You will
+  have to encode =URL= and/or =TITLE= if they contain slashes, and probably quote
+  those for the shell.
+
+  To use this feature, add a bookmark with an arbitrary name (e.g.
+  "/Org: store-link/") and enter this as "=Location=":
+
+  : javascript:location.href='org-protocol://store-link://'+encodeURIComponent(location.href)
+
+
+# <<org-protocol-capture>>
+* Note taking and citations: =org-protocol-capture=
+
+  This one is triggered through the sub-protocol "=capture=" and consumes up to
+  three data fields:
+
+  : emacsclient org-protocol:/capture:/URL/TITLE/BODY
+
+  will pop up an /*Capture*/ buffer and fill the template with the data
+  submitted.
+
+  To use this feature, add a bookmark with an arbitrary name (e.g.
+  "/Org: capture/") and enter this as "=Location=":
+
+  : javascript:location.href='org-protocol://capture://'+
+  :       encodeURIComponent(location.href)+'/'+
+  :       encodeURIComponent(document.title)+'/'+
+  :       encodeURIComponent(window.getSelection())
+
+  The result depends on the template used. See [[example-template][An example capture template]]
+  further down.
+
+  Note, that this one, as opposed to the other two standard handlers, does not
+  mix with more parameters to emacsclient. All parameters but the
+  #'=org-protocol://org-capture://...=' one will be discarded.
+
+# <<which-capture-template>>
+*** Which capture template is used?
+    :PROPERTIES:
+    :ID:       org:f56bcb9a-20e7-4b37-99f1-839a8821cc4b
+    :END:
+
+    You don't need to setup a capture template to use =org-protocol-capture=,
+    since Org-mode provides a default template for those cases.  Newer versions
+    provide an interactive interface for choosing a template.  You may provide a
+    template to be used by customizing the variable
+    =org-capture-default-template= [fn:1].
+
+    The problem with this solution would be, that only one template can be used
+    with the fuction. Luckily, =org-protocol-capture= understands a slightly
+    extended syntax to choose between several templates: If the first field of
+    the data submitted is exactly one character in length, this character will
+    be used to select the template.
+
+    Here we choose to use the "=x=" template:
+
+    : emacsclient org-protocol:/capture:/x/URL/TITLE/BODY
+
+    And, again, as bookmark location:
+    : javascript:location.href='org-protocol://capture://x/'+
+    :       encodeURIComponent(location.href)+'/'+
+    :       encodeURIComponent(document.title)+'/'+
+    :       encodeURIComponent(window.getSelection())
+
+# <<example-template>>
+***** An example capture template
+
+#+begin_src emacs-lisp
+  (setq org-capture-templates
+        (quote
+         (("w"
+           "Default template"
+           entry
+           (file+headline "~/org/capture.org" "Notes")
+           "* %^{Title}\n\n  Source: %u, %c\n\n  %i"
+           :empty-lines 1)
+          ;; ... more templates here ...
+          )))
+#+end_src
+
+    - "=w=" :: makes this one the default template used for
+             "=org-protocol://capture://=" URLs.
+    - =entry= :: makes it a regular entry with a headline.
+    - =file+headline= :: files the note in file "=~/org/capture.org=" as child of
+             the headline "=Notes="
+    - '=%c=' :: will be replaced by an Org-link pointing to the location of the
+             page you have been visiting when clicking on the link. The page
+             title will be the link's description.
+    - '=%i=' :: will be replaced by the selected text in your browser window if
+              any.
+
+    In addition, you may use the following placeholders in your template:
+
+    | Placeholders  | Replacement               |
+    |---------------+---------------------------|
+    | =%:link=        | URL of the web-page       |
+    | =%:description= | The title of the web-page |
+    | =%:initial=     | Selected text.            |
+
+    You may read more about templates and their special escape characters in the
+    [[http://orgmode.org/manual/Capture-templates.html#Capture-templates][Org-mode manual]].
+
+
+# <<org-protocol-remember>>
+*** Org-protocol-remember
+
+    The =org-protocol-remember= handler is now obsolete.  However, the handler is
+    still available for backward compatibility.  To use this handler, closely
+    follow the setup for the current =org-protocol-capture= handler, and simply
+    replace each occurrence of /capture/ with /remember/.
+
+    As remember templates look slightly different than capture templates, we
+    provide an example here.
+
+# <<example-remember-template>>
+***** An example remember template
+
+#+begin_src emacs-lisp
+(setq org-remember-templates
+      '((?w "* %^{Title}\n\n  Source: %u, %c\n\n  %i" nil "Notes")))
+#+end_src
+
+    - '=?w=' :: makes this one the default template used for
+              "=org-protocol://remember://=" URLs.
+    - '=%c=' :: will be replaced by an Org-link pointing to the location of the
+             page you have been visiting when clicking on the link. The page
+             title will be the link's description.
+    - '=%i=' :: will be replaced by the selected text in your browser window if
+              any.
+
+    In addition, you may use the following placeholders in your template:
+
+    | Placeholders  | Replacement               |
+    |---------------+---------------------------|
+    | =%:link=        | URL of the web-page       |
+    | =%:description= | The title of the web-page |
+    | =%:initial=     | Selected text.            |
+
+    You may read more about templates and their special escape characters in the
+    [[http://orgmode.org/manual/Capture-templates.html#Capture-templates][Org-mode manual]].
+
+# <<open-source>>
+* Edit published content: =org-protocol-open-source=
+
+  This one was designed to help with opening sources for editing when browsing
+  in the first place. =org-protocol-open-source= uses the custom variable
+  =org-protocol-project-alist= to map URLs to (local) filenames.
+
+  Let's take http://orgmode.org/worg/ as our example.
+
+  Our intention is to click a bookmark (or link) to open the source of the
+  published file we are reading in our favourite editor. The bookmark-URL above
+  could be used again. But since =org-protocol-open-source= regards the first
+  field only, this here will do:
+
+  : javascript:location.href='org-protocol://open-source://'+encodeURIComponent(location.href)
+
+  To open files publihed on Worg locally, =org-protocol-project-alist= should look
+  like this (you may skip the second project):
+
+#+begin_src emacs-lisp
+(setq org-protocol-project-alist
+      '(("Worg"
+         :base-url "http://orgmode.org/worg/"
+         :working-directory "/home/user/worg/"
+         :online-suffix ".html"
+         :working-suffix ".org")
+        ("My local Org-notes"
+         :base-url "http://localhost/org/"
+         :working-directory "/home/user/org/"
+         :online-suffix ".php"
+         :working-suffix ".org")))
+#+end_src
+
+  If you're now browsing http://orgmode.org/worg/org-contrib/org-protocol.html
+  and find a typo or have an idea how to enhance the documentation, simply click
+  the bookmark and start editing.
+
+  There are two functions to help you fill =org-protocol-project-alist= with
+  valid contents. One possibility is =org-protocol-create= that guides you through
+  the process. If you're editing an Org-mode file that is part of a publishing
+  project in =org-publish-project-alist=, try
+
+  : M-x org-protocol-create-for-org RET
+
+# <<open-source-rewritten-urls>>
+*** Handle rewritten URLs
+
+    In some cases, replacing =:base-url= with =:working-directory= and
+    =:online-suffix= with =:working-suffix= will not yield the desired results.
+
+    Suppose you maintain an online store located at =http://example.com/=. The
+    local sources reside in =/home/user/example/=. While most of the URLs map
+    directly to local file names by stripping URL parameters from the end and
+    replacing the =:base-url= with =:working-diretory= and =:online-suffix= with
+    =:working-suffix=, this might not work for rewritten URLs. It's common
+    practice to serve all products in such a store through one file and rewrite
+    URLs that do not match an existing file on the server.
+
+    That way, a request to =http://example.com/print/posters-A4.html= might be
+    rewritten on the server to something like
+    =http://example.com/shop/products.php/posters-A4.html.php=, where
+    =/posters-A4-digital.html.php= is the so called path info. Note that the
+    browser will not notice the rewrite.
+
+    If you now click your =org-protocol://open-source://= bookmark, the handler
+    will probably not find a file named
+    =/home/user/example/print/posters-A4.html.php= and fail.
+
+    Or, even more simple, assume you're browsing =http://example.com/=. A file
+    named =/home/user/example/.php= is not likely to exist.
+
+    Since Org-mode commit =69b46e10aab3b2374ecbc1a963ba56e77102a9a4= from 15th
+    Nov. 2009, such an entry in =org-protocol-project-alist= may hold an
+    additional property =:rewrites=. This property is a list of cons cells, each
+    of which maps a regular expression to a path relative to the
+    =:working-directory=.
+
+    Now map the URL to the path =/home/user/example/products.php= by adding the
+    =:rewrites= property like this:
+
+#+begin_src emacs-lisp
+  (setq org-protocol-project-alist
+        '(("example.com"
+           :base-url "http://example.com/"
+           :working-directory "/home/user/example/"
+           :online-suffix ".php"
+           :working-suffix ".php"
+           :rewrites (("example.com/print/" . "products.php")
+                      ("example.com/$" . "index.php"))
+           )))
+#+end_src
+
+   Guess what the second =:rewrites= element does. Since =example.com/$= is used as
+   a regular expression, it maps =http://example.com/=, =https://example.com=,
+   =http://www.example.com/= and similar to =/home/user/example/index.php=.
+
+   The =:rewrites= are searched as a last resort if and only if no existing file
+   name is matched.
+
+* Other browsers
+#<<conkeror-setup>>
+*** Conkeror setup
+
+Setting up org-protocol in [[http://conkeror.org/][Conkeror]] (an emacs inspired Mozilla web
+browser) requires a slightly different method. You may simply add the
+following snippets of code to your .conkerorrc file.[fn:tassilosblog]
+
+For org-store-link, add the following to .conkerorrc:
+
+: function org_store_link (url, title, window) {
+:     var cmd_str = 'emacsclient \"org-protocol://store-link://'+url+'/'+title+'\"';
+:     if (window != null) {
+: 	window.minibuffer.message('Issuing ' + cmd_str);
+:     }
+:     shell_command_blind(cmd_str);
+: }
+:
+: interactive("org-store-link", "Stores [[url][title]] as org link and copies url to emacs kill ring",
+: 	    function (I) {
+: 		org_store_link(encodeURIComponent(I.buffer.display_uri_string), encodeURIComponent(I.buffer.document.title), I.window);
+: 	    });
+
+For org-capture (or org-remember --- just exchange /capture/ with /remember/), use
+the following:
+
+: function org_capture (url, title, selection, window) {
+:     var cmd_str = 'emacsclient \"org-protocol://capture://'+url+'/'+title+'/'+selection+'\"';
+:     if (window != null) {
+: 	window.minibuffer.message('Issuing ' + cmd_str);
+:     }
+:     shell_command_blind(cmd_str);
+: }
+:
+: interactive("org-capture", "Clip url, title, and selection to capture via org-protocol",
+: 	    function (I) {
+: 		org_capture(encodeURIComponent(I.buffer.display_uri_string), encodeURIComponent(I.buffer.document.title), encodeURIComponent(I.buffer.top_frame.getSelection()), I.window);
+: 	    });
+
+Now, you should be able to invoke the commands from within conkeror
+with =M-x org-store-link= and =M-x org-capture= (or remember).
+
+Or, if you'd like your familiar emacs keybindings, you can add the
+following to your .conkerorrc:
+
+: define_key(content_buffer_normal_keymap, "C-c r", "org-capture");
+: define_key(content_buffer_normal_keymap, "C-c l", "org-store-link");
+
+[fn:tassilosblog] Adapted from Tassilo Horn's blog, "Calling
+org-remember from inside conkeror," November 14, 2008.
+http://tsdh.wordpress.com/2008/11/14/calling-org-remember-from-inside-conkeror/
+
+*** Uzbl
+    :PROPERTIES:
+    :CUSTOM_ID: uzbl
+    :END:
+
+Uzbl is a minimalistic webkit browser for Unix/Linux.
+
+- [[http://www.uzbl.org/]]
+
+You can pass encoded url data from uzbl to org-protocol by adding the
+following lines to =.config/uzbl/config=.
+
+#+begin_example
+
+# Org-protocol
+
+@cbind 	\\r = sh 'emacsclient "org-protocol://capture://\@<encodeURIComponent(window.location.href)>\@/\@<encodeURIComponent(document.title)>\@/\@<document.getSelection()>\@"'
+@cbind 	\\l = sh 'emacsclient "org-protocol://capture://\@<encodeURIComponent(window.location.href)>\@/\@<encodeURIComponent(document.title)>\@"'
+
+#+end_example
+
+These bind org-protocol-capture and org-store-line to "\r" and "\l" respectively.
+
+# <<firefox-keybindings>>
+* Keybindings for Firefox
+
+  You can add key bindings for the =org-protocol= commands using the keyconfig
+  Firefox extension.
+
+  First, install keyconfig from http://mozilla.dorando.at/keyconfig.xpi.
+
+  Open the keyconfig dialog by going to Tools and then Keyconfig.
+
+  Click the 'Add a new Key' button. Enter "Org store link" as the name.
+  Enter the following in the box with /* CODE */ in it:
+
+  : var orgProtoString = 'org-protocol://store-link://'+
+  :   encodeURIComponent(gBrowser.currentURI.spec) + '/' +
+  :   encodeURIComponent(gBrowser.contentWindow.document.title) + '/' +
+  :   encodeURIComponent(gBrowser.contentWindow.getSelection());
+  :
+  : gBrowser.loadURI(orgProtoString);
+
+  Click OK. You will then need to bind a key by clicking in the box next to the
+  'Apply' button and pressing whatever key combination you want. Click 'Apply' to
+  store the keybinding.
+
+  Repeat the steps, but call the next key "Org capture" and use the code below:
+
+  : var orgProtoString = 'org-protocol://capture://'+
+  :   encodeURIComponent(gBrowser.currentURI.spec) + '/' +
+  :   encodeURIComponent(gBrowser.contentWindow.document.title) + '/' +
+  :   encodeURIComponent(content.window.getSelection());
+  :
+  : gBrowser.loadURI(orgProtoString);
+
+  Click Close, then OK, and then restart Firefox. You should then be able to
+  access the org-protocol functions with your chosen keys.
+
+# <<screencast-intro>>
+* Screencast: small introduction to org-protocol.el
+
+#+begin_html
+<object width="640" height="464"><param name="allowfullscreen"
+value="true" /><param name="allowscriptaccess" value="always" /><param
+name="movie"
+value="http://vimeo.com/moogaloop.swf?clip_id=5662410&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=1&amp;color=FF7700&amp;fullscreen=1"
+/><embed
+src="http://vimeo.com/moogaloop.swf?clip_id=5662410&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=1&amp;color=FF7700&amp;fullscreen=1"
+type="application/x-shockwave-flash" allowfullscreen="true"
+allowscriptaccess="always" width="640" height="464"></embed></object>
+#+end_html
+
+This screencast shows off some nice things you can do with Firefox,
+Emacs, Org-mode and org-protocol.el.
+
+It first shows how to create two bookmarklets, =org-capture= and
+=org-store-link=. These bookmarklets enable your Firefox to talk to
+emacsclient via a new protocol (=org-protocol://=); emacsclient then
+parses the request and tells Emacs to capture or store stuff at the
+relevant places in your Org files.
+
+At the end of the screencast, we create two ubiquity commands from these
+bookmarklets.  Now in Firefox =ALT-SPC org-capture RET= creates a note
+in my Org files.
+
+
+* Footnotes
+
+[fn:1] Before commit =fc49c1ec96b2c789f573ae1ba936b930a8494402=, 3rd Sept. 2010,
+if a template with the key string "=w=" was defined, this one was chosen by
+default.  This was done to make bookmarks used for [[file:./org-annotation-helper.el][org-annotation-helper]] work
+without changing the template.
+

@@ -1,0 +1,191 @@
+#+OPTIONS:    H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) NEW(n)
+#+TITLE:      Testing Org
+#+AUTHOR:     Worg people
+#+EMAIL:      bzg AT altern DOT org
+#+LANGUAGE:   en
+#+PRIORITIES: A C B
+#+CATEGORY:   worg
+
+# This file is the default header for new Org files in Worg.  Feel free
+# to tailor it to your needs.
+
+[[file:../index.org][{Back to Worg's index}]]
+
+
+* Why test?
+
+Org-mode has grown into a popular large and feature-rich application,
+on which development often happens at a great pace. Indeed, feature
+requests posted on the [[file:org-mailing-list.org][Org mailing list]] are frequently developed and
+published within hours of the request. 
+
+The down-side of such rapid development is that on some occasions, one
+of the many patches, features, or [[http://en.wikipedia.org/wiki/Code_refactoring][refactorings]] being applied to the
+code-base may unintentionally cause unexpected behavior within
+Org-mode. This is known as a [[http://en.wikipedia.org/wiki/Software_regression][software regression]]. The larger and more
+complex Org-mode becomes, the more you may expect to see such software
+regressions.
+
+One concern with introducing software regressions is that the
+regression may not be immediately obvious to users. Indeed it can be
+hours, days, or even months before an Org-mode user moves to export an
+important schedule, when "bang" - the regression has reared its ugly
+head.
+
+The solution to avoiding software regressions? [[http://en.wikipedia.org/wiki/Regression_testing][Regression Testing!]]
+With a regression test suite the developer can run the tests prior to
+committing their change, to ensure their additions do not break the
+regression tests.
+
+Naturally, a regression test suite is only as good as the number,
+quality, and coverage of regression tests within it, and this is where
+Org-mode users can help.
+
+* Running the current test suite
+
+So long as you are on an up-to-date release of Org-mode you may run
+the tests on your local setup. To update Org-mode check out the 
+[[http://orgmode.org/worg/org-faq.html][org FAQ page]]. Note, the test suite will run on versions of Emacs back
+to version 22.
+
+A pre-requisite for running the tests is the [[http://www.emacswiki.org/emacs/ErtTestLibrary][ERT test library]]. This
+may be obtained easily as follows.
+
+** Emacs-22 / Emacs-23
+
+In Emacs-22 and Emacs-23 you will need to download the test files
+_ert.el_ and _ert-x.el_ to your testing directory. This may be
+accomplished with the following commands entered on the command line.
+
+: cd /path/to/org-mode/testing
+: curl -O https://github.com/mirrors/emacs/raw/master/lisp/emacs-lisp/ert.el
+: curl -O https://github.com/mirrors/emacs/raw/master/lisp/emacs-lisp/ert-x.el
+
+Alternatively you may download the files within your browser.
+
+ - browse to [[https://github.com/mirrors/emacs/tree/master/lisp/emacs-lisp][github.com/mirrors/emacs/lisp/emacs-lisp]]
+ - right click ert.el link and select _download linked file_ (or
+   equivalent) and save to org-mode/testing/ert.el
+ - right click ert-x.el link and select _download linked file_ (or
+   equivalent) and save to org-mode/testing/ert-x.el
+
+That's it - you may now run the tests.
+
+** Emacs-24
+
+Emacs-24 includes ERT, so nothing to do.
+
+** Run tests from the command line
+
+To run the tests from the command line (without loading your personal
+configurations) use the following commands (Note, if you have more
+than one version of Emacs on your system, you may need to include the
+full path to the required Emacs executable).
+
+: cd /path/to/org-mode/testing
+: Emacs -Q -batch -l org-test.el -eval "(setq org-confirm-babel-evaluate nil)" -f org-test-run-batch-tests'
+
+** Run tests from within Emacs
+
+To run the tests from within Emacs itself.
+
+: M-x load-file RET /path/to/org-mode/testing/org-test.el
+: M-x org-test-run-all-tests
+
+* Writing tests with minimal Emacs-lisp knowledge
+
+Thanks to the growing number of test-macros that are being made
+available, it is becoming easier to write regression tests with
+minimal lisp knowledge, and you are also likely to greatly improve
+your knowledge of Emacs-lisp as a result. And the more tests you
+write, the more confident you may be that your personal use of the
+many Org-mode features available has not been affected by regression.
+
+And of course, any help toward improving the Org-mode test-suite is
+highly appreciated.
+
+* Preparing to write tests
+
+Coming soon...
+
+* Tutorial
+
+Coming soon...
+
+* Testing Utilities
+
+Several useful utilities exist to make the practice of writing tests
+even easier. These are available from the Org-mode repository as a
+seperate git sub-module. Assuming you have cloned Org-mode using git,
+you may install these extra utilities with the following git commands.
+
+: cd /path/to/org-mode
+: git submodule init
+: git submodule update
+
+* Aims
+
+- Help all non-programmers to help:
+  - Link to tutorials on debugging, emacs debugger...
+
+- Create simple packages with test data, and place them here for download:
+  - Directory trees with org-files for export-stress-testing.
+  - One Org-file per bug to prevent regression.
+  - Name and add corner cases.
+
+- Create automated tests to programm against.
+
+* Ideas for test
+
+- Verify the output of tests with tools like =diff= (think /export/ here).
+- http://www.emacswiki.org/emacs-fr/UnitTesting
+
+* What we need to know to actually write tests
+
+The tutorial I'd need to write a test is one which lays out code I
+could copy and paste to do the following:
+
+** setup the test environment
+
+   - create a test directory
+   - create a sample test.org file
+   - put the cursor in a particular place
+
+** run the command we need to test
+
+  - hit the =TAB= key, or =C-c C-c= (some folks might need to be reminded how to
+    find out exactly what command is actually being run  when you hit a
+    keystroke. And some of me might need to be told what  lisp-code to use when
+    the keystroke runs different commands at  different places in a file)
+  - reformat a table
+  - clock in/out
+  - create the agenda
+  - export .html .ics .dvi files
+
+** How do we specify the correct result???
+
+  - check that the headline folded properly.  What's the lisp code for getting
+    the folded string as displayed?
+  - check that the cursor is where it should be? Especially when the cursor is
+    near elipses...
+  - check that the agenda is built properly.  What's the lisp code for getting
+    the agenda as a string?
+  - check that the exported files are correct.  Maybe the right suggestion is to
+    run the export on two different files, so the test  can focus on the 'diff'
+    between them.  That way different people who  run the same test on different
+    hosts can get the same result.
+
+
+*** ERT Example
+
+I implemented a toy test of org's html export facility using ert.el.
+See [[file:ert-publish-test.el]] for the implementation.  To run the test
+open up org-publish-test.el, and =M-x eval-buffer=.  This should load
+ert, and run the simple html export test.
+
+* COMMENT buffer dictionary
+
+ LocalWords:  ert el EmacsLispExpectations org's

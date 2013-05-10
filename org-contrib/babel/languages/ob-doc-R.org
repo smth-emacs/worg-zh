@@ -1,0 +1,441 @@
+#+OPTIONS:    H:3 num:nil toc:2 \n:nil @:t ::t |:t ^:{} -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate hideblocks
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) noexport(n)
+#+TITLE:      R Source Code Blocks in Org Mode
+#+AUTHOR:     Eric Schulte, Dan Davison, Tom Dye
+#+EMAIL:      schulte.eric at gmail dot com, davison at stats dot ox dot ac dot uk
+#+LANGUAGE:   en
+#+STYLE:      <style type="text/css">#outline-container-introduction{ clear:both; }</style>
+#+LINK_UP:    ../languages.html
+#+LINK_HOME:  http://orgmode.org/worg/
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+#+name: banner
+#+begin_html
+  <div id="subtitle" style="float: center; text-align: center;">
+  <p>
+  Org Mode support for <a href="http://www.r-project.org/">R</a>
+  </p>
+  <p>
+  <a href="http://www.r-project.org/">
+  <img src="http://www.r-project.org/Rlogo.jpg"/>
+  </a>
+  </p>
+  </div>
+#+end_html
+
+* Template Checklist [12/12]                                       :noexport:
+  - [X] Revise #+TITLE:
+  - [X] Indicate #+AUTHOR:
+  - [X] Add #+EMAIL:
+  - [X] Revise banner source block [3/3]
+    - [X] Add link to a useful language web site
+    - [X] Replace "Language" with language name
+    - [X] Find a suitable graphic and use it to link to the language
+      web site
+  - [X] Write an [[Introduction]]
+  - [X] Describe [[Requirements%20and%20Setup][Requirements and Setup]]
+  - [X] Replace "Language" with language name in [[Org%20Mode%20Features%20for%20Language%20Source%20Code%20Blocks][Org Mode Features for Language Source Code Blocks]]
+  - [X] Describe [[Header%20Arguments][Header Arguments]]
+  - [X] Describe support for [[Sessions]]
+  - [X] Describe [[Result%20Types][Result Types]]
+  - [X] Describe [[Other]] differences from supported languages
+  - [X] Provide brief [[Examples%20of%20Use][Examples of Use]]
+* Introduction
+R is a free software environment for statistical computing and
+graphics.  R source code blocks are fully supported in Org Mode with a
+wide variety of R-specific header arguments.
+
+R source code blocks in Org Mode can be used to create R packages,
+carry out statistical analyses, create graphic displays, and produce
+reproducible research papers.
+
+* Requirements and Setup
+R source code blocks in Org Mode require a working R installation.
+Precompiled binary distributions for Gnu/Linux, Mac OS X, and Windows
+are available at the [[http://cran.r-project.org][Comprehensive R Archive Network]], which also makes
+available the source code for compilation on other platforms.
+
+Org Mode supports graphical output for LaTeX documents using the [[http://sourceforge.net/projects/pgf/][PGF
+and TikZ graphics system for TeX]].  In order to use this facility your
+R installation will need the [[http://cran.r-project.org/web/packages/tikzDevice/index.html][tikzDevice package]].  One way to ensure
+that this device is loaded is to put the following lines in
+=.Rprofile=: 
+
+#+BEGIN_EXAMPLE
+old <- getOption("defaultPackages")
+options(defaultPackages = c(old, "tikzDevice"))
+#+END_EXAMPLE
+
+
+The Emacs mode, [[http://ess.r-project.org/][Emacs Speaks Statistics (ESS)]], is required for
+session-based evaluation.  ESS is designed to support editing of
+scripts and interaction with various statistical analysis programs
+such as R, S-Plus, SAS, Stata, and JAGS. 
+
+The following two lines in =.emacs= point Emacs to ESS and load it.
+Note that you will likely need to adjust the =load-path= accordingly. 
+
+#+begin_src emacs-lisp
+   (add-to-list 'load-path "~/.emacs.d/src/ess-5.6/lisp")
+   (require 'ess-site)
+#+end_src
+ 
+Finally, you'll need to ensure that =org-babel-load-languages=
+includes an entry for R.  Typically, =org-babel-load-languages=
+will contain many entries.  The example below omits other languages.
+
+#+begin_src emacs-lisp :tangle yes
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)))
+#+end_src
+
+** Note for Windows Users
+Additional steps may be necessary on Windows. See [[http://www.mail-archive.com/emacs-orgmode@gnu.org/msg57159.html][this Org-mode mailing list
+thread]] for background information. If when trying to execute R source code from
+Org-mode one encouters the message =The system cannot find the path specified=, it
+may be necessary to set the variable =org-babel-R-command= in
+.emacs. Note the addition of =--slave --no-save= to the custom path, which are
+the R defaults for Babel.
+
+#+begin_src emacs-lisp
+(setq org-babel-R-command "C:/Progra~1/R/R-2.15.0/bin/R --slave --no-save")
+#+end_src
+
+Adjust the path appropriately based on your R installation.
+
+For 64bit Windows users, the R installation process may have installed
+both 32bit and 64bit binaries. The above path points to the 32bit paths; for
+64bit operating systems the analog is:
+
+#+begin_src emacs-lisp
+(setq org-babel-R-command "C:/Progra~1/R/R-2.15.0/bin/x64/R --slave --no-save")
+#+end_src
+
+* Org Mode Features for R Source Code Blocks
+** Header Arguments
+
+There are no R-specific default header arguments.
+
+If a =:file filename.ext= header argument is provided to an R source
+block, then the output from the source block will go to the named
+file. What that output is depends on the value of the =:results=
+header argument.
+
+If the value is =:results graphics= then "base" graphics output is
+captured on disk, and a link to the graphics file is inserted into the
+Org Mode buffer (as is also the case with the graphics-only languages
+such as gnuplot, ditaa, dot, and asymptote.)  An attempt is made to
+find an R graphics device corresponding to the file extension.
+Currently, the following extensions are recognized: =.png=, =.jpg=,
+=.jpeg=, =.tiff=, =.bmp=, =.pdf=, =.ps=, =.postscript=, =.tex=, and
+=.svg=.  If the extension of the file name passed to =:file= is not
+recognized, PNG format output is created by default.
+    
+For further clarification of =:file= and =:results=, see [[http://thread.gmane.org/gmane.emacs.orgmode/35396/focus=35766][this thread]].
+
+There are many R-specific header arguments used to configure R graphics
+devices.  They include:
+
+  - width :: the width of the graphics region in inches
+  - height ::  the height of the graphics region in inches
+  - units :: for raster devices, the units in which width and height
+             are given -- =px=, =in=, =cm=, or =mm=
+  - bg :: the background color defaults to "transparent"
+  - fg :: the foreground color defaults to "black"
+  - pointsize :: the default point size in the graphics defaults to 12
+  - quality :: the quality of a JPEG image as a percentage
+  - compression :: the type of compression to be used
+  - res :: the nominal resolution in pixels per inch
+  - type :: the bitmap type, one of "Xlib", "quartz", or "cairo"
+  - antialias :: the type of antialiasing to be used when =type= =
+                 "cairo" or =type= = "quartz"
+  - family :: in normal use, one of "AvantGarde", "Bookman",
+              "Courier", "Helvetica" (default), "Helvetica-Narrow",
+              "NewCenturySchoolbook", "Palatino", or "Times" 
+  - title :: string to embed as the /Title field in the file defaults
+             to "R Graphics Output"
+  - fonts :: an R graphics font family name -- "sans", "serif", or "mono"
+  - version :: string describing the PDF version required to view the
+               output defaults to "1.4"
+  - paper :: the target paper size -- "special" (default), "default",
+             "a4", "letter", "legal", "us", "executive", "a4r", or
+             "USr", where the latter two are rotated to landscape orientation
+  - encoding :: the name of an encoding file 
+  - pagecentre :: if paper != "special" then a logical that defaults
+                  to true and determines whether the graphic device
+                  region is centered on the page
+  - colormodel :: a character string describing the color model,
+                  "srgb" (default), "gray", "grey", or "cmyk".
+  - useDingbats :: if TRUE (default) small circles will be rendered
+                   with the Dingbats font
+  - horizontal :: for the postscript device, a logical that defaults
+                  to true and dtermines the orientation of the printed
+                  image
+  - R-dev-args :: for graphics parameters not directly supported by
+                  Org Mode (see below)
+
+ See the R help page for the graphics devices (e.g., using =?png=,
+ =?pdf=, =?postscript= in an R session) for additional information on
+ these arguments.
+
+ Arguments to the R graphics device can also be passed as a string in
+ R argument syntax, using the header arg =:R-dev-args=.  This is
+ useful for graphics device arguments that don't have an Org Mode
+ header argument counterpart.
+    
+ The following example source block illustrates use of =:R-dev-args=
+ to pass background and foreground colors.  Note that both of these
+ arguments can also be passed directly as header args, using =:fg= and
+ =:bg=.
+
+#+begin_src org :exports code
+  ,#+header: :width 8 :height 8 :R-dev-args bg="olivedrab", fg="hotpink"
+  ,#+begin_src R :file z.pdf :results graphics
+  ,plot(matrix(rnorm(100), ncol=2), type="l")
+  ,#+end_src
+#+end_src
+
+** Sessions
+Sessions are fully supported by R source code blocks.  They can be
+used as one way to preserve state accessed by several source code
+blocks.  Sessions are also useful for debugging, since it is possible
+to view the values of variables created during the session.
+
+** Result Types
+
+R source code blocks can return text or graphical results.
+
+The [[http://cran.r-project.org/web/packages/ascii/index.html][ascii package]] coerces R objects to Org Mode, among other markup
+languages.  The [[http://cran.r-project.org/web/packages/Hmisc/index.html][Hmisc]], [[http://cran.r-project.org/web/packages/xtable/index.html][xtable]] and [[http://cran.r-project.org/web/packages/tables/index.html][tables]] packages contain functions to
+write R objects into LaTeX representations.
+
+R is capable of creating graphical displays in several formats.  The
+outputs supported by R source code blocks in Org Mode include:
+
+   - bmp :: bitmap image file format commonly used on Microsoft
+            Windows and OS/2
+   - jpg, jpeg :: Joint Photographics Expert Group method of lossy
+            compression for digital photography widely used in a
+            number of raster image file formats
+   - tex :: output tikz graphics language which can be typeset by
+            LaTeX so the fonts for text in the plot match the fonts
+            used in the LaTeX document
+   - tiff :: a sophisticated raster image format that allows multiple
+             pages in a document
+   - png :: Portable Network Graphics is a lossless raster image file format
+   - svg :: Scalable Vector Graphics is an open standard vector format
+            that can be embedded in web pages and readily edited in
+            open source software applications such as [[http://inkscape.org/][Inkscape]]
+   - pdf :: Portable Document Format can faithfully produce anything R
+            graphics can output
+   - ps, postscript :: PostScript is a predecessor of PDF that does
+                       not support semitransparent colors or
+                       hyperlinking
+
+When using R to produce graphical displays, you will typically set
+=:results graphics=.  However, if you use the [[http://had.co.nz/ggplot/][ggplot implementation of
+the grammar of graphics in R]], then you will need to set =:results
+output graphics=.
+
+* Examples of Use
+** Debugging
+   This section contains some tips on how to proceed if your R code is
+   not doing what you had hoped.
+*** Use =:session=
+    Evaluate your code using the =:session= header argument, then
+    visit the R buffer (i.e. the buffer containing the "inferior ESS"
+    process). Then you can inspect the objects that have been created,
+    and try out some lines of code. Useful R functions for inspecting
+    objects include (as always in R, type a "?" followed by the name
+    of the function to get help with the function)
+    - str
+    - dim
+    - summary
+*** Use ESS to step through evaluation line-by-line
+    1. Use C-c ' to visit the edit buffer for your code block
+    2. Use =ess-eval-line-and-step= to evaluate each line in turn
+
+In addition to =ess-eval-line-and-step=, there are several other ESS
+functions with names beginning =ess-eval-*=. They evaluate lines and
+regions in different ways; it's worth looking at their descriptions
+(C-h f).
+** Org Mode Output from R
+David Hajage's [[http://cran.r-project.org/web/packages/ascii/index.html][ascii]] R package creates appropriate plain text
+representations of many R objects. It features an option to specify
+that the plain text representations should be in Org format. This can
+be particularly useful for retrieving non-tabular R data structures in
+Org Mode for export.
+
+In R:
+#+begin_example 
+> library(ascii)
+> options(asciiType = "org")
+> library(Hmisc)
+> ascii(describe(esoph))
+#+CAPTION: esoph
+- 5 Variable
+- 88 Observations
+
+*agegp*
+|  n | missing | unique |
+| 88 |       0 |      6 |
+
+|           | 25-34 | 35-44 | 45-54 | 55-64 | 65-74 | 75+ |
+| Frequency |    15 |    15 |    16 |    16 |    15 |  11 |
+| %         |    17 |    17 |    18 |    18 |    17 |  12 |
+
+*alcgp*
+|  n | missing | unique |
+| 88 |       0 |      4 |
+
+ 0-39g/day (23, 26%), 40-79 (23, 26%), 80-119 (21, 24%), 120+ (21, 24%)
+
+*tobgp*
+|  n | missing | unique |
+| 88 |       0 |      4 |
+
+ 0-9g/day (24, 27%), 10-19 (24, 27%), 20-29 (20, 23%), 30+ (20, 23%)
+
+*ncases*
+|  n | missing | unique |  Mean | .05 | .10 | .25 | .50 | .75 | .90 | .95 |
+| 88 |       0 |     10 | 2.273 | 0.0 | 0.0 | 0.0 | 1.0 | 4.0 | 5.3 | 6.0 |
+
+|           |  0 |  1 |  2 |  3 | 4 | 5 | 6 | 8 | 9 | 17 |
+| Frequency | 29 | 16 | 11 |  9 | 8 | 6 | 5 | 1 | 2 |  1 |
+| %         | 33 | 18 | 12 | 10 | 9 | 7 | 6 | 1 | 2 |  1 |
+
+*ncontrols*
+|  n | missing | unique |  Mean | .05 | .10 | .25 | .50 |  .75 |  .90 |  .95 |
+| 88 |       0 |     30 | 11.08 | 1.0 | 1.0 | 3.0 | 6.0 | 14.0 | 29.1 | 40.0 |
+
+ lowest:  1  2  3  4  5, highest: 40 46 48 49 60
+#+end_example
+
+
+The Org Mode source code block specifies =:results org= so the output
+is wrapped in =#+BEGIN_ORG= ... =#+END_ORG=.  This way, arbitrary
+output can be included and easily replaced on subsequent evaluations
+of the source code block.
+
+
+: #+begin_src R :results output org
+:   library(ascii)
+:   options(asciiType="org")
+:   ascii(summary(table(1:4, 1:4)))
+: #+end_src
+:
+: #+results:
+: #+BEGIN_ORG
+: - Number of cases in table: 4 
+: - Number of factors: 2 
+: - Test for independence of all factors:
+:   - Chisq = 12, df = 9, p-value = 0.2133
+:   - Chi-squared approximation may be incorrect
+: #+END_ORG
+
+The results in this case are exported as a nested list structure:
+#+results:
+#+BEGIN_ORG
+- Number of cases in table: 4 
+- Number of factors: 2 
+- Test for independence of all factors:
+  - Chisq = 12, df = 9, p-value = 0.2133
+  - Chi-squared approximation may be incorrect
+#+END_ORG
+
+
+The =caption=, =header=, and =include.colnames= options are useful.
+
+
+: #+BEGIN_SRC R :results output org
+:  library(ascii)
+:  a <- runif(100)
+:  c <- "Quantiles of 100 random numbers"
+:  b <- ascii(quantile(a),header=T,include.colnames=T,caption=c)
+:  print(b,type="org")
+:  rm(a,b,c)
+: #+END_SRC
+:
+: #+RESULTS:
+: #+BEGIN_ORG
+: #+CAPTION: Quantiles of 100 random numbers
+: | 0%   | 25%  | 50%  | 75%  | 100% |
+: |------+------+------+------+------|
+: | 0.03 | 0.28 | 0.52 | 0.74 | 1.00 |
+: #+END_ORG
+
+The output exported to HTML can be quite nice.
+
+#+RESULTS:
+#+BEGIN_ORG
+#+CAPTION: Quantiles of 100 random numbers
+|   0% |  25% |  50% |  75% | 100% |
+|------+------+------+------+------|
+| 0.03 | 0.28 | 0.52 | 0.74 | 1.00 |
+#+END_ORG
+
+** Graphics Produced by ggplot2
+
+When the =ggplot2= package is used graphics output requires =:results output
+graphics=.  The following example writes the graphics output to the
+file specified in the =:file= header argument.
+
+#+begin_example
+  ,#+name: r-with-ggplot2
+  ,#+begin_src R :results output graphics :var tbl=foo :file r/foo-output.png :width 400 :height 300
+    library(ggplot2)
+    res <- ggplot(tbl, aes(a_foo_var))
+    res + geom_histogram(aes(y=..density..)) +
+    geom_density(weight=2) + xlab("A foo variable")
+  ,#+end_src
+  
+  ,#+results:
+  [[file:r/foo-output.png]]
+#+end_example
+
+** LaTeX code from R
+This example summarises a linear regression fit. Usually the Org Mode
+user should not have to be involved in LaTeX code generation, because
+this is the responsibility of Org Mode's LaTeX export engine. In this
+example, neither the printed representation, nor the value of
+=summary(lm(y ~ x))= is tabular, and it would therefore require some
+work to get the information in to an Org Mode table. However, the
+=xtable= package can be used to output a LaTeX table. Using =:results
+latex= as a header argument to the R source code block ensures that
+this is returned as a LaTeX block in the Org Mode buffer and thus can be
+included correctly in LaTex-based export targets.
+
+: #+begin_src R :results output latex
+: library(xtable)
+: x <- rnorm(100)
+: y <- x + rnorm(100)
+: xtable(summary(lm(y ~ x)))
+: #+end_src
+
+: #+results:
+: #+BEGIN_LaTeX
+: % latex table generated in R 2.9.2 by xtable 1.5-5 package
+: % Wed Dec  9 17:17:53 2009
+: \begin{table}[ht]
+: \begin{center}
+: \begin{tabular}{rrrrr}
+:   \hline
+:  & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
+:   \hline
+: (Intercept) & -0.0743 & 0.0969 & -0.77 & 0.4454 \\ 
+:   x & 1.0707 & 0.0923 & 11.60 & 0.0000 \\ 
+:    \hline
+: \end{tabular}
+: \end{center}
+: \end{table}
+: #+END_LaTeX
+
+** =ess-switch-to-end-of-ESS=
+ When in an Org Mode R code edit buffer with an associated R session,
+ =M-x ess-switch-to-end-of-ESS= will bring the R session buffer into
+ view and place point at the prompt. ESS binds this to =C-c C-z= and
+ =C-M-r= by default.
+

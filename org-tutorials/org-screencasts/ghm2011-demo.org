@@ -1,0 +1,89 @@
+#+TITLE:      GNU Hackers Meeting 2011 - Org Demo by Bastien
+#+AUTHOR:     Worg people
+#+EMAIL:      bzg AT altern DOT org
+#+OPTIONS:    H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) NEW(n)
+#+LANGUAGE:   en
+#+PRIORITIES: A C B
+#+CATEGORY:   worg
+
+[[file:../index.org][{Back to Tutorials}]]
+
+* GHM 2011 video
+
+#+begin_html
+<iframe src="http://player.vimeo.com/video/30721952?title=0&amp;byline=0&amp;portrait=0" width="480" height="354" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+#+end_html
+
+* Timeline
+
+#+index: Notes
+#+index: Headlines
+#+index: Folding
+#+index: Structure Editing
+#+index: Lists
+#+index: Checkbox
+#+index: List!hierarchy
+#+index: List!Checkbox
+#+index: Links
+#+index: Logging
+#+index: Agenda
+#+index: Agenda!Files
+#+index: TODO keyword
+#+index: Tags!Matching
+#+index: Timestamps
+#+index: Category
+#+index: Deadline
+#+index: Clock
+#+index: Capture!Vidéo question
+#+index: Outline
+#+index: Clock
+#+index: Clock!Report
+#+index: Column view
+#+index: Effort!Estimate
+#+index: Export
+#+index: Tables
+#+index: Babel
+#+index: Extensions
+#+index: Worg
+#+index: org-element
+#+index: org-element-parse-region
+#+index: tee-shirt
+
+- 8m26s Demo Start
+- 8m54s Notes and headlines:
+- 9m06s Folding
+- 9m30s Structure Editing
+- 10m20s Lists
+- 10m45s Checkbox
+- 12m20s List hierarchy and checkboxes
+- 12m57s Links
+- 14m44s TODO Items
+- 17m15s DONE Logging
+- 18m02s Agenda
+- 18m20s Agenda files
+- 19m02s TODO keyword
+- 20m00s tags matching
+- 20m40s "agenda" is really "view"
+- 21m05s Timestamps
+- 22m40s Category
+- 23m25s Deadline
+- 24m04s Clock
+- 25m30s Clock report
+- 26m45s Column view
+- 27m55s Effort Estimate
+- 29m30s Export
+- 32m15s Tables
+- 37m15s Babel
+- 39m05s Extensions
+- 40m45s Book
+- 41m15s Worg
+- 43m20s org-element
+- 45m11s org-element-parse-region
+- 46m17s tee-shirt
+- 46m45s-51m14s The Org Father
+- 56m14s capture question
+
+Thanks to Rustom Mody for this timeline.

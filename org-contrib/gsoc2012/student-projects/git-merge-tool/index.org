@@ -1,0 +1,56 @@
+#+OPTIONS:    H:3 num:nil toc:2 \n:nil @:t ::t |:t ^:{} -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate hideblocks
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) noexport(n)
+#+TITLE:      Merge Tool for Org-Mode
+#+AUTHOR:     Andrew Young
+#+EMAIL:      youngar17 at gmail dot com
+#+LANGUAGE:   en
+#+STYLE:      <style type="text/css">#outline-container-introduction{ clear:both; }</style>
+# #+LINK_UP:  http://orgmode.org/worg/org-faq.html
+#+LINK_HOME:  http://orgmode.org/worg/
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+/A tool for for merging Org-Mode modifications/
+
+* Git-Merge-Tool
+** About
+Git-Merge-Tool is a specialised merge tool for [[http://orgmode.org/][Org-mode]] and [[http://git-scm.com/][Git]]. It
+will be developed during the GSoC 2012.
+
+There is currently no release for this project. Please stay tuned as
+this project page will be updated when it becomes available.
+
+** Summary
+Org-Merge-Driver is to create an extension to Org-Mode which will act
+as a merge driver for Org-Mode files. A merge driver is a program
+which will combine two versions of a file based off of a common
+ancestor into a single file, marking conflicting changes within. A
+specialized merge driver for Org-Mode leverages the file structure to
+understand the effects of modifications on the integrity of sections.
+
+The main use of a merge driver is for use in collaborative writing.
+Org-merge-driver will be compatible with Git, Mercurial, and
+Bazaar. The merge driver will solidify Org-Mode as a tool for
+collaborative work.
+
+* Information
+
+| Version             | 0.1                                              |
+| Git Repo            | git clone git://orgmode.org/org-merge-driver.git |
+| License             | [[http://www.gnu.org/licenses/gpl.html][GPL V3]]                                           |
+| Author              | Andrew Young                                     |
+| Supported Platforms | N/A                                              |
+| Binaries            | N/A                                              |
+| Contact             | youngar17 at gmail dot com                       |
+
+** Documentation
+- [[file:manual.org][Manual]]
+- [[file:examples.org][Example Output]]
+- [[http://orgmode.org/w/?p=org-merge-driver.git][Source Code Repository]]
+
+** More Information
+- [[file:prototype.org][Prototype Information]]
+- [[file:project-plan.org][Project Plan]]
+- [[file:development.org][Current Development]]
+- The original Google Summer of Code 2012 proposal can be found [[file:proposal.org][here]].

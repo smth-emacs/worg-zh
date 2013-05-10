@@ -1,0 +1,85 @@
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) 
+#+TITLE:      About Worg
+#+AUTHOR:     Worg people
+#+EMAIL:      mdl AT imapmail DOT org
+#+LANGUAGE:   en
+#+PRIORITIES: A C B
+#+CATEGORY:   worg
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+
+[[file:index.org][{Back to Worg's index}]]
+
+* What is Worg?  What is its relation to Org?
+
+[[http://www.orgmode.org][Org]] is an [[http://www.gnu.org/software/emacs/][Emacs]] mode for /keeping notes, maintaining to-do lists, and
+doing project planning with a fast and effective plain-text system/
+(as the [[http://www.orgmode.org/org.html][Org manual]] says).
+
+Worg is a /collectively/-built knowledge database about [[http://orgmode.org][Org]],
+planning in plain text, and other related topics.
+
+* Why use Org-mode for creating a collaborative website?
+
+Because Org makes it easy, fast and effective to edit *well-structured*
+files.  Ever wanted to edit a [[file:org-tutorials/tables.org][table]] in a wiki?  Ever wanted to change the
+outline structure in a wikipage?  Ever wanted to edit lists quickly?  Org
+lets you do this.
+
+Because Org-mode makes *beautiful* documents: it supports links, font
+beautification, examples, etc.  And you can export those documents to
+HTML, LaTeX, or DocBook.
+
+Because Org is also a powerful *task-management system*.  Hopefully sharing
+a [[file:worg-todo.org][TODO file]] will make it easy for everyone to know where he could help.
+
+* So Worg is a bit like a wiki, no?
+
+No.  Yes.  Kind of.  Here are a few differences:
+
+- you edit the pages *using Emacs*, not a cheesy web interface;
+
+- the Worg website (repository) is maintained using [[http://git-scm.com/][git]];
+
+- even if people are invited to merge their changes into the [[http://orgmode.org/worg/][main Worg
+  website]], they are free to start a new Worgie of their own.  Using git
+  makes Worg a *distributed* community website.
+
+- there is an important difference: Org is a very fast and effective plain
+  text task-management system.  Meaning that you can add the Worg todo
+  file (=worg-todo.org= in the Worg directory) to your =org-agenda-files= and
+  see your list of task populated by tasks added by other people...
+
+* Who can participate in the editing of Worg?
+
+Everyone with a minimal knowledge of Org (and Emacs) and git.  See the
+page describing how to use [[file:worg-git.org][git for editing Worg]] for details.
+
+* Do I need to register somewhere?
+
+No.  You just need to send your public key to Jason or Bastien.
+
+* So what is contained in Worg?
+
+Everything related to Org, project planning in plain text, and the Org
+community.  Go crazy!
+
+* Who's in charge of Worg?
+
+Worg was started by [[http://www.cognition.ens.fr/~guerry/][Bastien]]
+in the hope that other Org-ers around will bite into this and start
+sharing tutorials, example of codes, etc.
+
+Worg is currently maintained by [[file:users/mlundin.org][Matt Lundin]]. Feel free to [[mailto:mdlATimapmailDOTorg][contact him]] if
+you have any questions about the site.
+
+* OK, I want to contribute to Worg now!
+
+The first thing you need to know is [[file:worg-git.org][how to use git for Worg]].
+
+The second thing you might be interested in is general advice and
+conventions on how to [[file:worg-editing.org][let Worg grow]].
+
+If you're interested in knowing how Worg publishes itself as a website,
+check the [[file:worg-setup.org][Worg setup]] page.

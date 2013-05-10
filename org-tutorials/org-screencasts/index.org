@@ -1,0 +1,69 @@
+#+OPTIONS:    H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) NEW(n)
+#+TITLE:      Org Screencasts
+#+AUTHOR:     Worg people
+#+EMAIL:      bzg AT altern DOT org
+#+LANGUAGE:   en
+#+PRIORITIES: A C B
+#+CATEGORY:   worg
+
+# This file is the default header for new Org files in Worg.  Feel free
+# to tailor it to your needs.
+
+[[file:../index.org][{Back to Tutorials}]]
+
+* Assorted Screencasts
+
+- [[http://www.youtube.com/watch?v%3D6W82EdwQhxU&feature%3Drelated][A 12 minute overview]] of Org-mode by Richard Dillon
+
+- [[http://www.youtube.com/watch?v%3Dht4JtEbFtFI][An Emacs / Org-mode introduction]] by [[https://plus.google.com/111807449581513171721/posts?hl%3Dfr][Vlado Handziski]]
+
+- [[http://www.youtube.com/watch?v%3Dht4JtEbFtFI&feature%3Drelated][An introduction to Org-mode and Babel]] by [[https://plus.google.com/111807449581513171721/posts?hl%3Dfr][Vlado Handziski]]
+
+- [[http://jaderholm.com/screencasts.html][A 25 minute screencast]] by [[http://jaderholm.com/][Scott Jaderholm]], demonstrating the basic
+  features of Org-mode.
+
+- A short [[http://lumiere.ens.fr/~guerry/org-playing-with-lists-screencast.html][screencast]] presenting a few features of plain lists, by
+  [[http://www.cognition.ens.fr/~guerry/][Bastien]].
+
+- [[http://orgmode.org/worg/org-tutorials/org-column-view-tutorial.html][Emacs Org's Column View]] by [[http://www.cognition.ens.fr/~guerry/][Bastien]], with an accompanying [[http://www.cognition.ens.fr/~guerry/org-column-screencast.php][screencast]].
+
+- [[http://vimeo.com/16533939][Setting up Org-mode for Windows]] by Russell Adams, 30 minutes with
+  code snippets at [[http://article.gmane.org/gmane.emacs.orgmode/33234]].
+
+- [[file:ghm2011-demo.org][Org demo during the GNU Hackers Meeting]] in Paris (August 2011), by
+  Bastien, along with a timeline of features demonstrated.
+
+- [[file:org-mode-google-tech-talk.org][Org demo by Carsten at Google (2008)]], along with a timeline of features
+  demonstrated.
+
+* Org-mode Screencast Series
+
+- [[file:org-series-episode-1.org][Episode 1 - Org-mode Basics]]
+
+- Episode N - Using the Agenda
+
+- Episode N - Capture and Refile Notes
+
+- Episode N - TODO states and Tags
+
+- Episode N - Exporting and Publishing
+
+- Episode N - Org-babel
+
+- Episode N - Org-mode on Mobile Devices
+
+
+* Org-mode episodes in Richard Dillon's [[http://www.youtube.com/user/rpdillon/videos][Hack Emacs]] series
+
+- [[http://www.youtube.com/watch?v=6W82EdwQhxU][An Overview]]
+
+- [[http://www.youtube.com/watch?v=fTJVLJd_gz0][Tables]]
+
+- [[http://www.youtube.com/watch?v=VTh_Xgt69-E][Mark up and Links]]
+
+- [[http://www.youtube.com/watch?v=nsGYet02bEk][Managing Structure]]
+
+- Other screen casts in this series use demo files in Org mode

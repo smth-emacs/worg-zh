@@ -1,0 +1,79 @@
+#+TITLE:      Google Tech Talk by Carsten Dominik (2008)
+#+AUTHOR:     Worg people
+#+EMAIL:      bzg AT altern DOT org
+#+OPTIONS:    H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) NEW(n)
+#+LANGUAGE:   en
+#+PRIORITIES: A C B
+#+CATEGORY:   worg
+
+[[file:../index.org][{Back to Tutorials}]]
+
+* Google Tech Talk by Carsten (2008)
+
+Here is the video of the [[http://research.google.com/video.html][Google Tech Talk]] about Org-mode that I (Carsten)
+gave on July 15th, 2008 on the Google campus in Mountain View,
+California.  Thanks to [[http://emacspeak.sourceforge.net/raman/][T.V. Raman]] and [[http://technical-dresese.blogspot.com/][Andrew Hyatt]] for being my hosts
+during my stay.
+
+#+begin_html
+<iframe width="420" height="315" src="http://www.youtube.com/embed/oJTwQvgfgMM" frameborder="0" allowfullscreen></iframe>
+#+end_html
+
+* Timeline
+
+#+index: Notes
+#+index: Sparse tree
+#+index: Headlines
+#+index: Folding
+#+index: Structure Editing
+#+index: Lists
+#+index: Links
+#+index: Agenda
+#+index: Agenda!Files
+#+index: TODO keyword
+#+index: Tags!Matching
+#+index: Timestamps
+#+index: Deadline
+#+index: Column view
+#+index: Capture
+#+index: Collect
+#+index: Export
+#+index: Calc
+#+index: Tables
+#+index: Extensions
+#+index: Worg
+#+index: Outline
+
+- =1:20= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D1m20s][Carsten Start]]
+- =1:50= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D1m50s][History]]
+- =2:15= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D2m15s][Working with Text Files]]
+- =3:58= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D3m58s][Notes (not tasks) based project planning]]
+- =5:50= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D5m50s][Outline mode - fixing]]
+- =9:56= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D9m56s][Structure Editing]]
+- =11:00= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D11m00s][Note taking other supports]]
+- =13:35= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D13m35s][Meta data Intro]]
+  - TODO
+  - Priority
+  - =14:57= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D14m57s][tags]]
+  - =15:26= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D15m26s][Timeplanning]]
+- =15:53= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D15m53s][Properties]]
+- =16:02= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D16m02s][Meta data propagation]]
+- =16:49= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D16m49s][Special Meta entry interfaces]]
+- =17:55= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D17m55s][DateTime interface]]
+- =18:24= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D18m24s][Column view]]
+- =19:20= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D19m20s][Capture with remember]]
+- =23:02= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D23m02s][Collect and Display]]
+- =23:52= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D23m52s][Sparse tree]]
+- =25:47= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D25m47s][Agenda view]]
+- =27:27= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D27m27s][Exporting and publishing]]
+- =29:05= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D29m05s][Tables]]
+- =31:34= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D31m34s][Calc]]
+- =32:44= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D32m44s][Radio tables]]
+- =34:53= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D34m53s][Context sensitive keys]]
+- =38:13= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D38m13s][How is org used]]
+- =40:55= [[http://www.youtube.com/watch?v%3DoJTwQvgfgMM#t%3D40m55s][Evolved Software software]]
+
+Thanks to Rustom Mody for this timeline.

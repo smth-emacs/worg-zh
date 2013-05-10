@@ -1,0 +1,75 @@
+#+OPTIONS:    H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c)
+#+TITLE:      Org and Mac OS X
+#+AUTHOR:     Worg people
+#+EMAIL:      mdl AT imapmail DOT org
+#+LANGUAGE:   en
+#+PRIORITIES: A C B
+#+CATEGORY:   worg
+
+# This file is the default header for new Org files in Worg.  Feel free
+# to tailor it to your needs.
+
+[[file:index.org][{Back to Worg's index}]]
+
+Assorted hacks to interact with org-mode whilst working with OS X
+applications other than Emacs...
+
+* For use within Emacs
+
+  Pull information from other applications into org-mode.
+
+** [[file:org-contrib/org-mac-message.org][org-mac-message]] -- linking to messages in OS X Mail.app
+   Create links to selected or flagged messages in Mail.app.
+   Written by /John Wiegley/ and /Christopher Suckling/.
+
+** [[file:org-contrib/org-mac-iCal.org][org-mac-iCal]] -- import OS X iCal.app events into Emacs diary
+   Written by /Christopher Suckling/.
+
+** [[file:org-contrib/org-mac-link-grabber.org][org-mac-link-grabber]] -- Hyperlink to items in mac applications
+   grab the current link or selection from an open mac application and
+   insert it as a hyperlink at point in an org-mode document. Written
+   by /Anthony Lander/.
+* For use outside Emacs
+
+  Push information from the current application into org-mode.
+  
+** [[http://github.com/claviclaws/org-mac-protocol][org-mac-protocol]] -- create links and remember notes from a variety of OS X applications
+   Written by /Christopher Suckling/.
+   Address Book support by /Alexander Poslavsky/.
+   
+   : Version: 0.634
+
+   A suite of scripts that allow the user to annotate their org-mode
+   buffers without switching focus from other OS X applications.
+
+   The following applications are currently supported:
+
+   + [[http://www.apple.com/safari/][Safari]], including links to multiple tabs
+   + [[http://www.mozilla.org/firefox/][Firefox]]
+   + [[http://www.google.com/chrome/][Google Chrome]]
+   + Mail
+   + Address Book
+   + [[http://skim-app.sourceforge.net/][Skim]]
+   + [[http://bibdesk.sourceforge.net/][BibDesk]]
+   + Pages
+   + Numbers
+   + [[http://www.apple.com/iwork/keynote/][Keynote]]
+   + [[http://www.apple.com/itunes/][iTunes]]
+   + Finder
+   + Terminal
+     
+*** Obtaining
+    
+    A git repository, together with full documentation, can be found at http://github.com/claviclaws/org-mac-protocol.
+
+** [[file:org-contrib/org-mac-maillink.org][org-mac-maillink]] -- linking to messages in OS X Microsoft Entourage app
+   A short Applescript/terminal hack that allows the user to create a link to a
+   message from within the Microsoft Entourage application and
+   paste it directly into an Org-mode file.  The link uses the email's
+   subject line as its description.
+   Written by /Matt Strickland/.
+    
+   

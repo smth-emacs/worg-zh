@@ -1,0 +1,160 @@
+#+TITLE:     Writing Non-Beamer presentations in org-mode
+#+AUTHOR:    Eric Schulte
+#+DATE:      <2011-06-02 Thu>
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+
+* Introduction
+
+While [[file:org-beamer/tutorial.org][Beamer]] is a great option for generating high-quality
+presentations from Org-mode documents, sometimes a lighter-weight
+simpler option is desirable.  This page presents two alternative
+options for giving quick slide-show presentations from Org-mode
+documents.
+
+- [[Epresent]] :: is an Emacs minor mode for giving presentations.  The
+     Emacs editor is used in a full-screen mode as the presentation
+     engine, and headings of the Org-mode buffer are presented
+     directly (with a few nice bells and whistles).
+
+- [[S5]] :: is a standards-based suite for writing slide-show
+     presentations in html web pages.  The browser is used as the
+     presentation engine, and a slightly altered form of Org-mode's
+     HTML export serves as the base of the presentation.
+
+- org-html5presentation :: Is an Exporter of Org-mode documents to
+     HTML5 slide show presentations.
+     (see [[https://gist.github.com/509761][gist.github.com/509761]] for code and usage information)
+
+- [[org-tree-slide]] :: is a simple tool to treat a tree of an org buffer as
+     a single slide. Since each slide is displayed by simple narrowing,
+     an editable presentation is easily achieved without restricting
+     the functionality of Org-mode. And usage of org-tree-slide is not
+     limited to a presentation. Three profiles are predefined for
+     different scenarios.
+
+* Epresent
+  :PROPERTIES:
+  :CUSTOM_ID: Epresent
+  :END:
+
+Epresent was originally developed on top of outline mode by Tom
+Tromey.  Eric Schulte then adopted it for work with Org-mode.  The
+code for using Org-mode with epresent is available at
+https://github.com/eschulte/epresent.
+
+Epresent leverages existing Org-mode features like inline image
+display, inline latex fragments, and in-buffer code fontification to
+generate very nice (if somewhat nerdy) looking presentations directly
+from within Emacs.  This has the nice benefit that during-presentation
+editing and code evaluation is possible.
+
+The README file in the epresent repository has instillation
+instructions, however usage is as simple as...
+1. =M-x load-file epresent.el=
+2. open the example =present.org= file located in the repository
+3. call =M-x epresent-run=
+4. press "=t=" to view the top level of the presentation
+5. navigate the presentation with "=n=", "=p=", "=t=" and quit with "=q="
+
+* S5
+  :PROPERTIES:
+  :CUSTOM_ID: S5
+  :END:
+
+[[http://meyerweb.com/eric/tools/s5/][S5]] is a "/Simple Standards-Based Slide Show System/" implemented using
+HTML, CSS and Javascript.
+
+Two S5 options exist for Org-mode.
+
+1. Yann Hodique has developed a javascript based option which works
+   directly with Org-mode's existing html export.
+
+   This technique is described on Yann's blog
+   [[http://www.hodique.info/blog/2009/11/14/s5_presentation_from_org-mode][s5 presentation from org-mode]].
+
+2. There is also code implementing an altered version of Org-mode's
+   existing html export tailored to generating static S5
+   presentations.
+
+  This second technique is described below.
+
+** Code and usage for =org-export-as-s5=.
+- The emacs-lisp code available [[https://github.com/eschulte/org-S5/blob/master/org-export-as-s5.el][here]] defines a single function
+  (=org-export-as-s5=) as a simple wrapper around Org-mode's existing
+  html export.  This function is based heavily on Pierre de Buyl's
+  [[http://thread.gmane.org/gmane.emacs.orgmode/33143/match=s5][very thorough S5 export instructions]] posted to the Org-mode mailing
+  list.
+
+- Simply evaluate this code, or add it to your =.emacs=, then call
+  =M-x org-export-as-s5= from within an Org-mode buffer. *Note*: the
+  [[http://gitweb.adaptive.cs.unm.edu/org-S5.git/tree/HEAD:/ui][ui]] directory holding S5 support files must be located in the same
+  directory as the exported html.
+
+- Currently there are three themes which can be set with the
+  following.
+  #+begin_src emacs-lisp
+    (setq org-s5-theme "railscast")   ; based off `color-theme-railscasts'
+    (setq org-s5-theme "default")     ; the default S5 theme
+    (setq org-s5-theme "i18n")        ; the i18n theme by the author of S5
+  #+end_src
+
+- This entire directory is available as a [[https://github.com/eschulte/org-S5/blob/master/org-export-as-s5.el][git repository]]
+
+- For two examples of org-S5 in action see [[http://eschulte.github.com/org-S5/][here]]
+
+* org-tree-slide
+  :PROPERTIES:
+  :CUSTOM_ID: org-tree-slide
+  :END:
+
+org-tree-slide is an Emacs minor mode for org-mode. Once you toggle
+=M-x org-tree-slie-mode=, just type =<left>= and =<right>= to move between 
+slides. To show CONTENT, type =C-x s c=. When you exit this minor mode,
+the slideshow will be finished.
+
+The code is available at [[https://github.com/takaxp/org-tree-slide][Github]]. Please read [[https://github.com/takaxp/org-tree-slide/blob/master/README.org][README.org]] and check user
+variables for flexible control.
+
+Download org-tree-slide from the following direct link:
+[[https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el]]
+
+** Recommended key bindings and profiles
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "<f8>") 'org-tree-slide-mode)
+(global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
+#+end_src
+
+Preset profiles are defined in org-tree-slide.
+1. =M-x org-tree-slide-simple-profile=            ; Simple use
+2. =M-x org-tree-slide-presentation-profile=      ; Presentation use
+3. =M-x org-tree-slide-narrowing-control-profile= ; TODO Pursuit with narrowing
+These functions set user variables for each using scenario.
+You can find more detail in [[https://github.com/takaxp/org-tree-slide/blob/master/README.org][README.org]]. 
+* orgmode-slideshow
+
+Sander Boer created orgmode-slideshow -- see his message:
+
+I hacked together a javascript and a css that transforms the default html
+export of my org file to a slide show:
+
+- http://www.mauc.nl/presentations/test.html
+  
+Here's the org-file:
+
+- http://www.mauc.nl/presentations/test.org
+  
+Here's the rest (depends on jQuery)
+
+- http://www.mauc.nl/assets/css/orgmode-slideshow.css
+- http://www.mauc.nl/assets/js/orgmode-slideshow.js
+

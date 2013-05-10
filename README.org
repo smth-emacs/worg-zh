@@ -1,0 +1,35 @@
+#  -*- mode: org; coding: utf-8; -*-
+#+TITLE: Worg 的简体中文翻译
+
+[[http://orgmode.org/][Org-mode]] 是一个用纯文本来管理复杂生活的强大系统。它可以将你所有的笔记、脑图、待
+办事项列表、日历、每天计划及项目日程无缝地嵌入到一个系统中，方便你搜索、加密、备
+份、同步 (比如 Dropbox)、导入／导出，包括在移动设备上访问。它还可用于创作网页和
+文档。目前, Org-mode 已经成为 Emacs 默认发行套件的一部分。
+
+[[http://orgmode.org/worg/][Worg]] 是由 Org-mode 的粉丝们志愿建立的社区，收集了一些教程、好主意、代码片断等。
+
+[[https://github.com/smth-emacs/worg-zh][Worg-zh]] 是由水木社区的 Emacs 爱好者们自发组织的一个翻译项目，试图将大家参考比较
+多的一些 Org-mode 文档翻译成中文，方便更多的初学者（也包括有经验的用户）。另外，
+此项目将会添加一些中文处理所特有的内容。期望此项目能够以英文的 Worg 为起点，形成
+一个以中文为母语的 Org-mode 粉丝们所乐见的参考文档集合。
+
+* 原始文档
+
+英文的原始文档参见：
+  - 网页 -- http://orgmode.org/worg/
+  - git  -- http://orgmode.org/cgit.cgi/worg.git/
+
+* 译文约定
+
+软件版本约定：如无特别说明，则以 Emacs24 + Org-mode 8.0 为起点。
+
+** 名词列表
+
+* 参加须知
+
+请在水木社区的 [[http://www.newsmth.net/nForum/#!board/Emacs][Emacs 版]] 留言。
+  - http://www.newsmth.net/nForum/#!board/Emacs
+
+* 更新记录
+- <2013-05-10 20:45> 初始化 worg-zh 项目，合并 worg.git
+  - worg.git -- [[http://orgmode.org/cgit.cgi/worg.git/commit/?id=953101622916024cf09e48da287da8605e1a58ad][ref:953101622916024cf09e48da287da8605e1a58ad]]
