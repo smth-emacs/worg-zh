@@ -39,36 +39,52 @@
 在执行 =git merge= 操作时应该用参数 =--no-ff=, 即避免 =fast-forward= 合并。
 
 志愿者在翻译时，可按如下流程执行：
-1) 在 GitHub 上 =fork= 本仓库到自己的账号下，比如 *exaos/worg-zh*
-2) 克隆自己仓库 worg-zh 到本地。
-: git clone git@github.com:exaos/worg-zh.git
-3) 添加一个英文的远程仓库，并提取其仓库内容。
-: git remote add cgit-worg git://orgmode.org/worg.git
-: git fetch --all
-4) 把英文版本的内容创建一个本地分支，比如 =worg=:
-: git branch -b worg cgit-worg/master
-5) 从英文仓库中提取新版本的页面开始翻译。比如英文版本的 =worg-setup.org= 文件比
-   本地新，则可以这样提出文件：
-: git co worg -- worg-setup.org
-6) 添加 =smth-emacs/worg-zh= 为远程仓库，并为 =pull request= 创建新的分支。
-: git remote add gh-smth git://github.com/smth-emacs/worg-zh.git
-: git fetch --all
-: git branch -b for-smth gh-smth/devel
-7) 在你自己的 =master= 分支下可以任意修改并 =commit=, 感觉完善并可以提交给
-   =smth-emacs/worg-zh= 了，先切换到 =for-smth= 分支，使用 =--no-ff= 选项进行
-   =merge= 操作:
-: git checkout for-smth
-: git merge --no-ff master
-: git push origin for-smth:for-smth
-8) 然后在 github 上用你的 =for-smth= 分支向 =smth-emacs/worg-zh= 发起 =pull
-   request=. 管理员收到请求时，会首先合并到 =devel= 分支下，检查无误后，再进一步
-   合并到 =master= 分支中。
+- 在 GitHub 上 =fork= 本仓库到自己的账号下，比如 *exaos/worg-zh*
+- 克隆自己仓库 worg-zh 到本地。
+  #+BEGIN_EXAMPLE
+  git clone git@github.com:exaos/worg-zh.git
+  #+END_EXAMPLE
+- 添加 =smth-emacs/worg-zh= 为远程仓库，并为 =pull request= 创建新的分支。
+  #+BEGIN_EXAMPLE
+  git remote add gh-smth git://github.com/smth-emacs/worg-zh.git
+  git fetch --all
+  git branch -b for-smth gh-smth/devel
+  #+END_EXAMPLE
+- 在你自己的 =master= 分支下可以任意修改并 =commit=, 感觉完善并可以提交给
+  =smth-emacs/worg-zh= 了，先切换到 =for-smth= 分支，使用 =--no-ff= 选项进行
+  =merge= 操作:
+  #+BEGIN_EXAMPLE
+  git checkout for-smth
+  git merge --no-ff master
+  git push origin for-smth:for-smth
+  #+END_EXAMPLE
+- 然后在 github 上用你的 =for-smth= 分支向 =smth-emacs/worg-zh= 发起 =pull
+  request=. 管理员收到请求时，会首先合并到 =devel= 分支下，检查无误后，再进一步
+  合并到 =master= 分支中。
+
+如果想更新到最新的英文版本，按如下步骤：
+- 添加一个英文的远程仓库，并下载其仓库内容。
+  #+BEGIN_EXAMPLE
+  git remote add cgit-worg git://orgmode.org/worg.git
+  git fetch cgit-worg
+  #+END_EXAMPLE
+- 依英文版本的远程支持创建一个本地分支，比如 =worg=:
+  #+BEGIN_EXAMPLE
+  git branch -b worg cgit-worg/master
+  #+END_EXAMPLE
+- 从英文仓库中提取新版本的页面开始翻译。比如英文版本的 =worg-setup.org= 文件比本
+  地新，则可以这样提出文件：
+  #+BEGIN_EXAMPLE
+  git co worg -- worg-setup.org
+  #+END_EXAMPLE
 
 对于 =smth-emacs/worg-zh= 已经包含有的文件：
 - 如果已经有中文翻译，但未完成的，建议继续完成。
-- 如果还没有中文翻译，并且有新的英文版本的，按上述步骤 5) 中添加新文件，但应该把
+- 如果还没有中文翻译，并且有新的英文版本的，按上述步骤提示中添加新文件，但应该把
   英文版本的 commit 号包含在提交历史中。比如：
-: git commit -m "Fetch new version worg-setup.org: worg.git-ref:9531016"
+  #+BEGIN_EXAMPLE
+  git commit -m "Fetch new version worg-setup.org: worg.git-ref:9531016"
+  #+END_EXAMPLE
 - 如果中文翻译已经完成，并且有新的英文版本的，应将英文版本检出其它文件名，根据它
   直接更新已经翻译的文件。
 
